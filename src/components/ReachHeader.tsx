@@ -10,6 +10,7 @@ const navigation = [
   { name: "About", href: "/about" },
   { name: "What We Do", href: "/what-we-do" },
   { name: "Our Impact", href: "/dashboard" },
+  { name: "Leaderboard", href: "/leaderboard" },
   { name: "Stories", href: "/stories" },
   { name: "Messages", href: "/messages" },
   { name: "Festival 2026", href: "/festival" },
