@@ -23,6 +23,7 @@ export default function Leaderboard() {
         </div>
       </section>
 
+      {/* Leaderboard Content */}
       <section className="pb-16">
         <div className="container mx-auto px-6">
           <Tabs defaultValue="top-donors" className="w-full">

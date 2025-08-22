@@ -29,7 +29,7 @@ const mainItems = [
   { title: "💌 Your Letters", url: "/messages", icon: Mail },
   { title: "Children's Character Festival 2026", url: "/festival", icon: Calendar },
   { title: "What We Do", url: "/what-we-do", icon: GraduationCap },
-  { title: "Our Impacts", url: "/dashboard", icon: BarChart3 },
+  { title: "Our Impacts", url: "/leaderboard", icon: BarChart3 },
   { title: "About Us", url: "/about", icon: Info },
   { title: "Impact Stories", url: "/stories", icon: StickyNote },
   { title: "Donate", url: "/donate", icon: Heart },
