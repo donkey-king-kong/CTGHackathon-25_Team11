@@ -53,7 +53,7 @@ const App = () => (
             {/* Authentication */}
             <Route path="/auth" element={<Auth />} />
             
-            {/* Dashboard Scaffolding - Future Implementation */}
+            {/* Leaderboard Scaffolding - Future Implementation */}
             <Route path="/leaderboard/leaderboard" element={<Leaderboard />} />
             <Route path="/leaderboard/recent" element={<Leaderboard />} />
             <Route path="/leaderboard/regions" element={<Leaderboard />} />
