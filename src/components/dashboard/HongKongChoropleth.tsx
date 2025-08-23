@@ -508,7 +508,7 @@ export function HongKongChoropleth() {
         <div className="mt-4 p-4 bg-gray-50 rounded-lg">
           <h4 className="text-sm font-semibold text-gray-700 mb-3">Current District Data</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {districtData.filter(d => d.total_donations > 0).map((district) => (
+            {districtData.map((district) => (
               <motion.div
                 key={district.district_code}
                 initial={{ opacity: 0, y: 20 }}
@@ -527,7 +527,6 @@ export function HongKongChoropleth() {
                     <p className="text-xs text-muted-foreground mb-2">Total Donations</p>
                     <div className="flex justify-between text-xs">
                       <span>Donations: {district.donation_count}</span>
-                      <span>Avg: ${district.average_donation.toFixed(0)}</span>
                     </div>
                   </CardContent>
                 </Card>
