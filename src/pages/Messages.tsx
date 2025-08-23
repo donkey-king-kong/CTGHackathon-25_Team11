@@ -72,7 +72,7 @@ export default function Messages() {
       let query = supabase
         .from('messages')
         .select('*')
-        .eq('status', 'approved')
+        // .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       const { data, error } = await query;

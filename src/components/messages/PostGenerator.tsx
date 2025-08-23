@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Instagram, Download, Share2, Copy, Sparkles, User } from "lucide-react";
+import { Instagram, Facebook, Download, Share2, Copy, Sparkles, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -7,11 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { OpenAIService, type CaptionOptimization } from "@/services/openai";
-
-interface InstagramCredentials {
-  username: string;
-  accessToken?: string;
-}
+import { dataUrlToBlob, uploadHtmlToSupabase, uploadImageToSupabase, buildShareHtml, loadFacebookSdk, openShareDialog,makeId } from "@/lib/socialShare";
 
 interface Message {
   id: string;
@@ -25,18 +21,16 @@ interface Message {
   animation_type: string;
 }
 
-interface InstagramPostGeneratorProps {
+interface PostGeneratorProps {
   message: Message;
 }
 
-export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps) {
+export function PostGenerator({ message }: PostGeneratorProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedPost, setGeneratedPost] = useState<string | null>(null);
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizedCaption, setOptimizedCaption] = useState<CaptionOptimization | null>(null);
-  const [instagramUsername, setInstagramUsername] = useState('');
-  const [showUsernameInput, setShowUsernameInput] = useState(false);
-  
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
   const generateStaticPost = async () => {
@@ -297,13 +291,7 @@ export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps)
         // But we can open to the main page and guide users
         
         instagramUrl = 'https://www.instagram.com/';
-        
-        if (instagramUsername) {
-          instructions = `🚀 Opening Instagram!\n\n✅ Image downloaded\n✅ Caption copied\n\nNote: Username "${instagramUsername}" is for your reference only.\n\nIn Instagram:\n1. Log in to your account\n2. Click your profile picture (top left) to add Story\n3. Or click "+" to create new post\n4. Upload your downloaded image\n5. Paste caption (Ctrl+V) and share! 🎉`;
-        } else {
-          instructions = `🚀 Opening Instagram!\n\n✅ Image downloaded\n✅ Caption copied\n\nIn Instagram:\n1. Log in to your account\n2. Click your profile picture (top left) to add Story\n3. Or click "+" to create new post\n4. Upload your downloaded image\n5. Paste caption (Ctrl+V) and share! 🎉`;
-        }
-        
+        instructions = `🚀 Opening Instagram!\n\n✅ Image downloaded\n✅ Caption copied\n\nIn Instagram:\n1. Log in to your account\n2. Click your profile picture (top left) to add Story\n3. Or click "+" to create new post\n4. Upload your downloaded image\n5. Paste caption (Ctrl+V) and share! 🎉`;
         window.open(instagramUrl, '_blank');
       }
       
@@ -326,13 +314,6 @@ export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps)
       window.open('https://www.instagram.com/', '_blank');
       
       alert(`📱 Manual mode:\n\n✅ Image downloaded\n✅ Caption copied\n\n1. Go to Instagram\n2. Create new Story\n3. Upload image\n4. Paste caption\n5. Share!`);
-    }
-  };
-
-  const handleUsernameSubmit = () => {
-    if (instagramUsername.trim()) {
-      setShowUsernameInput(false);
-      toast.success(`Ready to post as @${instagramUsername}! 🎉`);
     }
   };
 
@@ -363,20 +344,92 @@ export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps)
     }
   };
 
+  const shareToFacebook = async () => {
+    try {
+      console.groupCollapsed('%c[FB] Share flow','font-weight:bold;');
+      console.time('[FB] total');
+
+      // 1) ensure canvas has data
+      const canvas = canvasRef.current; 
+      console.log('[FB] step=1 canvasRef', { hasCanvas: !!canvas });
+      if (!canvas) {
+        console.error('[FB] step=1 error: Canvas not ready');
+        throw new Error('Canvas not ready');
+      }
+      console.log('[FB] step=1 canvas size', { width: canvas.width, height: canvas.height });
+
+      // 2) Export JPEG for FB 
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+      console.log('[FB] step=2 dataUrl length', dataUrl.length);
+
+      // 3) Make a lightweight title/description 
+      const title = `A Thank-You Message${message?.child_alias ? ` from ${message.child_alias}` : ''}`;
+      const raw = (message?.text || '').trim().replace(/\s+/g, ' ');
+      const description = raw.length > 160 ? raw.slice(0, 157) + '…' : raw || 'Read and share.';
+      console.log('[FB] step=3 meta', { title, descriptionPreview: description.slice(0, 80) });
+
+      // 4) Upload image to Supabase
+      const id = makeId();
+      console.log('[FB] step=4 id', id);
+      const imageBlob = await dataUrlToBlob(dataUrl);
+      console.log('[FB] step=4 blob', { size: imageBlob.size, type: imageBlob.type });
+      const imagePath = `posts/${id}.jpg`; // in bucket "shares"
+      console.log('[FB] step=4 imagePath', imagePath);
+      const imageUrl = await uploadImageToSupabase('shares', imagePath, imageBlob);
+      console.log('[FB] step=4 imageUrl', imageUrl);
+
+      // 5) Build & upload the OG share page (static HTML)
+      // const pagePath = `shares/${id}.html`;
+      // console.log('[FB] step=5 pagePath', pagePath);
+      // const pageUrl = await uploadHtmlToSupabase(
+      //   'shares',
+      //   pagePath,
+      //   buildShareHtml({
+      //     title,
+      //     description,
+      //     imageUrl,
+      //     // canonical URL can simply be the same Supabase public URL
+      //     pageUrl: imageUrl.replace(/\/posts\/[^/]+\.jpg$/, `/${pagePath}`),
+      //   })
+      // );
+      // console.log('[FB] step=5 pageUrl', pageUrl);
+
+      // 6) Open Share Dialog
+      console.log('[FB] step=5 opening dialog', {
+        appId: import.meta.env.VITE_FACEBOOK_APP_ID,
+        href: imageUrl,
+      });
+      await loadFacebookSdk(import.meta.env.VITE_FACEBOOK_APP_ID!);
+      openShareDialog(imageUrl);
+
+      console.timeEnd('[FB] total');
+      console.groupEnd();
+    } catch (e) {
+      const err = e as any;
+      console.error('[FB] share failed', {
+        name: err?.name,
+        message: err?.message || String(err),
+        stack: err?.stack,
+      });
+      console.groupEnd();
+}
+
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Instagram className="h-4 w-4 mr-2" />
-          Create Instagram Post
+          Create A Post
         </Button>
       </DialogTrigger>
       
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create Instagram Post</DialogTitle>
+          <DialogTitle>Create A Post</DialogTitle>
           <DialogDescription>
-            Generate a beautiful Instagram post from this thank you message
+            Generate a beautiful post from this thank you message for Instagram or Facebook!
           </DialogDescription>
         </DialogHeader>
         
@@ -389,7 +442,7 @@ export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps)
               size="lg"
               className="bg-gradient-to-r from-reach-green to-reach-orange hover:from-reach-green/90 hover:to-reach-orange/90 text-white"
             >
-              {isGenerating ? 'Creating Post...' : '✨ Generate Instagram Post'}
+              {isGenerating ? 'Creating Post...' : '✨ Generate Your Post'}
             </Button>
             
             {/* AI Caption Optimization */}
@@ -404,44 +457,6 @@ export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps)
                 {isOptimizing ? 'Optimizing with AI...' : 'Optimize Caption with AI'}
               </Button>
             </div>
-
-            {/* Instagram Username Input */}
-            {!instagramUsername && (
-              <div className="text-center">
-                <Button
-                  onClick={() => setShowUsernameInput(true)}
-                  variant="outline"
-                  className="border-pink-200 hover:bg-pink-50"
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  Add Instagram Account
-                </Button>
-              </div>
-            )}
-
-            {instagramUsername && (
-              <div className="text-center space-y-2">
-                <div className="inline-flex items-center px-3 py-2 rounded-full bg-pink-100 text-pink-700 text-sm">
-                  <Instagram className="h-4 w-4 mr-2" />
-                  @{instagramUsername}
-                </div>
-                <div>
-                  <Button
-                    onClick={() => {
-                      setInstagramUsername('');
-                      setShowUsernameInput(false);
-                    }}
-                    variant="ghost"
-                    size="sm"
-                    className="text-gray-500 hover:text-gray-700"
-                  >
-                    Change Account
-                  </Button>
-                </div>
-              </div>
-            )}
-
-
           </div>
           
           {/* Canvas for rendering */}
@@ -451,57 +466,6 @@ export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps)
             width={1080}
             height={1080}
           />
-          
-          {/* Instagram Username Input Form */}
-          {showUsernameInput && (
-            <Card className="border-pink-200">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <User className="h-5 w-5 mr-2 text-pink-500" />
-                  Instagram Account
-                </h3>
-                
-                <div className="space-y-4">
-                  <div className="text-sm text-gray-600 bg-pink-50 p-3 rounded-lg">
-                    <p className="font-medium mb-1">📱 Remember Your Account</p>
-                    <p>Adding your Instagram username helps you remember which account to use. We'll include it in the instructions to help guide you!</p>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="instagramUsername" className="text-sm font-medium">
-                      Instagram Username
-                    </Label>
-                    <Input
-                      id="instagramUsername"
-                      type="text"
-                      placeholder="your_username"
-                      value={instagramUsername}
-                      onChange={(e) => setInstagramUsername(e.target.value.replace('@', ''))}
-                      className="mt-1"
-                      onKeyDown={(e) => e.key === 'Enter' && handleUsernameSubmit()}
-                    />
-                  </div>
-                  
-                  <div className="flex gap-3">
-                    <Button
-                      onClick={handleUsernameSubmit}
-                      disabled={!instagramUsername.trim()}
-                      className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
-                    >
-                      ✅ Save Account
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowUsernameInput(false)}
-                      className="px-6"
-                    >
-                      Skip
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
 
           {/* AI-Optimized Caption Display */}
           {optimizedCaption && (
@@ -555,7 +519,7 @@ export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps)
             <div className="space-y-4">
               <Card>
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4 text-center">Your Instagram Post</h3>
+                  <h3 className="text-lg font-semibold mb-4 text-center">Share Your Post!</h3>
                   
                   <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden max-w-md mx-auto shadow-lg">
                     <img 
@@ -568,8 +532,21 @@ export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps)
               </Card>
               
               {/* Action Buttons */}
+              <div className="text-center">
+                  {/* Facebook share button */}
+                  <Button
+                    onClick={shareToFacebook}
+                    size="lg"
+                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-purple-700 text-white px-8"
+                    disabled={isGenerating}
+                  >
+                    <Facebook className="h-5 w-5 mr-2" />
+                    Post to Facebook
+                  </Button>
+                </div>
+
               <div className="space-y-4">
-                {/* Primary Instagram Action */}
+                {/* Instagram Share Button */}
                 <div className="text-center">
                   <Button
                     onClick={() => postToInstagramStory(generatedPost)}
@@ -577,7 +554,7 @@ export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps)
                     className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-8"
                   >
                     <Instagram className="h-5 w-5 mr-2" />
-                    📱 Post to Instagram Story
+                    Post to Instagram Story
                   </Button>
                 </div>
 
@@ -626,7 +603,7 @@ export function InstagramPostGenerator({ message }: InstagramPostGeneratorProps)
                 ) : (
                   <>
                     <div>💡 Use "Optimize Caption with AI" for better engagement!</div>
-                    <div>📱 Click "Post to Instagram Story" to open Instagram with your content ready!</div>
+                    <div>📱 Click "Post to Instagram Story" or "Post to Facebook" to share your post with everyone!</div>
                   </>
                 )}
               </div>
