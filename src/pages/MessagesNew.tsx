@@ -2,76 +2,119 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Upload, X, FileImage, FileVideo, Heart, CheckCircle } from "lucide-react";
+import {
+  Upload,
+  X,
+  FileImage,
+  FileVideo,
+  Heart,
+  CheckCircle,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { MultiDonorSelect } from "@/components/messages/DonorSearch";
 
 interface FormData {
   child_alias: string;
-  school: string;
-  region: string;
+  // region: string;
   language: string;
   text: string;
-  donor_tag: string;
+  donors: string[];
   animation_type: string;
   consent: {
     guardian: boolean;
     school: boolean;
     media_release: boolean;
   };
+  privacy: boolean;
 }
 
 export default function MessagesNew() {
   const [formData, setFormData] = useState<FormData>({
     child_alias: "",
-    school: "",
-    region: "",
+    // region: "",
     language: "",
     text: "",
-    donor_tag: "",
+    donors: [],
     animation_type: "letterbox",
     consent: {
       guardian: false,
       school: false,
       media_release: false,
     },
+    privacy: true,
   });
-  
+
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
-  const regions = [
-    "Central & Western", "Eastern", "Southern", "Wan Chai",
-    "Kowloon City", "Kwun Tong", "Sham Shui Po", "Wong Tai Sin", "Yau Tsim Mong",
-    "Islands", "Kwai Tsing", "North", "Sai Kung", "Sha Tin", "Tai Po", "Tsuen Wan", "Tuen Mun", "Yuen Long"
-  ];
+  // const regions = [
+  //   "Central & Western",
+  //   "Eastern",
+  //   "Southern",
+  //   "Wan Chai",
+  //   "Kowloon City",
+  //   "Kwun Tong",
+  //   "Sham Shui Po",
+  //   "Wong Tai Sin",
+  //   "Yau Tsim Mong",
+  //   "Islands",
+  //   "Kwai Tsing",
+  //   "North",
+  //   "Sai Kung",
+  //   "Sha Tin",
+  //   "Tai Po",
+  //   "Tsuen Wan",
+  //   "Tuen Mun",
+  //   "Yuen Long",
+  // ];
+
+  // const regionsAll = [
+  //   "All", "Central & Western", "Eastern", "Southern", "Wan Chai",
+  //   "Kowloon City", "Kwun Tong", "Sham Shui Po", "Wong Tai Sin", "Yau Tsim Mong",
+  //   "Islands", "Kwai Tsing", "North", "Sai Kung", "Sha Tin", "Tai Po", "Tsuen Wan", "Tuen Mun", "Yuen Long"
+  // ]
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleConsentChange = (field: keyof FormData['consent'], checked: boolean) => {
-    setFormData(prev => ({
+  const handleConsentChange = (
+    field: keyof FormData["consent"],
+    checked: boolean
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      consent: { ...prev.consent, [field]: checked }
+      consent: { ...prev.consent, [field]: checked },
     }));
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
-    
+
     // Validate file types and sizes
-    const validFiles = files.filter(file => {
-      const isImage = file.type.startsWith('image/') && ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
-      const isVideo = file.type.startsWith('video/') && file.type === 'video/mp4';
-      const validSize = isImage ? file.size <= 5 * 1024 * 1024 : file.size <= 25 * 1024 * 1024; // 5MB for images, 25MB for videos
-      
+    const validFiles = files.filter((file) => {
+      const isImage =
+        file.type.startsWith("image/") &&
+        ["image/jpeg", "image/png", "image/webp"].includes(file.type);
+      const isVideo =
+        file.type.startsWith("video/") && file.type === "video/mp4";
+      const validSize = isImage
+        ? file.size <= 5 * 1024 * 1024
+        : file.size <= 25 * 1024 * 1024; // 5MB for images, 25MB for videos
+
       if (!isImage && !isVideo) {
         toast({
           title: "Invalid file type",
@@ -80,7 +123,7 @@ export default function MessagesNew() {
         });
         return false;
       }
-      
+
       if (!validSize) {
         toast({
           title: "File too large",
@@ -89,42 +132,47 @@ export default function MessagesNew() {
         });
         return false;
       }
-      
+
       return true;
     });
-    
-    setMediaFiles(prev => [...prev, ...validFiles].slice(0, 5)); // Max 5 files
+
+    setMediaFiles((prev) => [...prev, ...validFiles].slice(0, 5)); // Max 5 files
   };
 
   const removeFile = (index: number) => {
-    setMediaFiles(prev => prev.filter((_, i) => i !== index));
+    setMediaFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const uploadMedia = async (): Promise<{ urls: string[], types: string[] }> => {
+  const uploadMedia = async (): Promise<{
+    urls: string[];
+    types: string[];
+  }> => {
     const urls: string[] = [];
     const types: string[] = [];
-    
+
     for (const file of mediaFiles) {
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${file.name}`;
-      
+      const fileName = `${Date.now()}-${Math.random()
+        .toString(36)
+        .substring(7)}-${file.name}`;
+
       const { error: uploadError } = await supabase.storage
-        .from('message-media')
+        .from("message-media")
         .upload(fileName, file);
-        
+
       if (uploadError) {
         throw uploadError;
       }
-      
+
       urls.push(fileName);
-      types.push(file.type.startsWith('image/') ? 'image' : 'video');
+      types.push(file.type.startsWith("image/") ? "image" : "video");
     }
-    
+
     return { urls, types };
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validation
     if (!formData.child_alias || !formData.text || !formData.language) {
       toast({
@@ -134,8 +182,12 @@ export default function MessagesNew() {
       });
       return;
     }
-    
-    if (!formData.consent.guardian || !formData.consent.school || !formData.consent.media_release) {
+
+    if (
+      !formData.consent.guardian ||
+      !formData.consent.school ||
+      !formData.consent.media_release
+    ) {
       toast({
         title: "Consent required",
         description: "All consent checkboxes must be checked to proceed.",
@@ -143,45 +195,44 @@ export default function MessagesNew() {
       });
       return;
     }
-    
+
     setUploading(true);
-    
+
     try {
       let mediaData = { urls: [] as string[], types: [] as string[] };
-      
+
       if (mediaFiles.length > 0) {
         mediaData = await uploadMedia();
       }
-      
-      const { error } = await supabase
-        .from('messages')
-        .insert([{
+
+      const { error } = await supabase.from("messages").insert([
+        {
           child_alias: formData.child_alias,
-          school: formData.school || null,
-          region: formData.region || null,
           language: formData.language,
+          // region: formData.region,
           text: formData.text,
           media_urls: mediaData.urls,
           media_types: mediaData.types,
-          donor_tag: formData.donor_tag || null,
+          donors: formData.donors || null,
           animation_type: formData.animation_type,
           consent: formData.consent,
-          status: 'pending'
-        }]);
-        
+          type: formData.privacy,
+        },
+      ]);
+
       if (error) throw error;
-      
+
       setSubmitted(true);
       toast({
         title: "Message submitted successfully!",
-        description: "Your message will be reviewed and published soon.",
+        description: "Your message has been published!",
       });
-      
     } catch (error) {
-      console.error('Error submitting message:', error);
+      console.error("Error submitting message:", error);
       toast({
         title: "Submission failed",
-        description: "There was an error submitting your message. Please try again.",
+        description:
+          "There was an error submitting your message. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -198,19 +249,22 @@ export default function MessagesNew() {
               <CheckCircle className="h-20 w-20 mx-auto text-brand-primary mb-4" />
               <div className="text-6xl mb-4">🎉</div>
             </div>
-            <h2 className="text-2xl font-bold mb-4 text-brand-primary">Thank You!</h2>
+            <h2 className="text-2xl font-bold mb-4 text-brand-primary">
+              Thank You!
+            </h2>
             <p className="text-text-muted mb-6">
-              Your heartfelt message has been received and will be reviewed before being shared with our donors. 
-              Thank you for helping us show the impact of their generous support!
+              Your heartfelt message has been received and will be reviewed
+              before being shared with our donors. Thank you for helping us show
+              the impact of their generous support!
             </p>
             <div className="space-y-3">
-              <Button 
-                onClick={() => window.location.href = '/messages'}
+              <Button
+                onClick={() => (window.location.href = "/messages")}
                 className="w-full"
               >
                 View All Messages
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 onClick={() => window.location.reload()}
                 className="w-full"
@@ -233,7 +287,8 @@ export default function MessagesNew() {
             <Heart className="h-12 w-12 mx-auto mb-4" />
             <h1 className="text-4xl font-bold mb-4">Share Your Gratitude</h1>
             <p className="text-lg">
-              Help us show donors the incredible impact of their support by sharing a thank you message.
+              Help us show donors the incredible impact of their support by
+              sharing a thank you message.
             </p>
           </div>
         </div>
@@ -242,12 +297,38 @@ export default function MessagesNew() {
       <div className="container mx-auto px-6 py-12">
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Heart className="h-5 w-5 mr-2 text-brand-primary" />
-                Message Details
-              </CardTitle>
+            <CardHeader className="flex">
+              <div className="flex items-start gap-2">
+                <Heart className="h-5 w-5 text-brand-primary" />
+                <span className="font-semibold text-lg">Message Details</span>
+              </div>
+
+              {/* Right side: toggle with labels */}
+              <div className="flex items-end align gap-2">
+                <span className="text-sm text-text-muted">Private</span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, privacy: !prev.privacy }))
+                  }
+                  className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out ${
+                    formData.privacy ? "bg-green-700" : "bg-gray-500"
+                  }`}
+                  aria-pressed={formData.privacy}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
+                      formData.privacy ? "translate-x-5" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+                <span className="text-sm text-text-muted">Public</span>
+                <p className="text-sm text-text-muted mt-1">
+                  Private notes are only visible to addressed donors.
+                </p>
+              </div>
             </CardHeader>
+
             <CardContent className="space-y-6">
               {/* Child Alias */}
               <div>
@@ -255,7 +336,9 @@ export default function MessagesNew() {
                 <Input
                   id="child_alias"
                   value={formData.child_alias}
-                  onChange={(e) => handleInputChange('child_alias', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("child_alias", e.target.value)
+                  }
                   placeholder="e.g., Little Emma, Kai, Rainbow..."
                   required
                 />
@@ -264,43 +347,45 @@ export default function MessagesNew() {
                 </p>
               </div>
 
-              {/* School */}
-              <div>
-                <Label htmlFor="school">School Name</Label>
-                <Input
-                  id="school"
-                  value={formData.school}
-                  onChange={(e) => handleInputChange('school', e.target.value)}
-                  placeholder="e.g., Happy Valley Kindergarten"
-                />
-              </div>
-
               {/* Region */}
-              <div>
+              {/* <div>
                 <Label htmlFor="region">Hong Kong Region</Label>
-                <Select value={formData.region} onValueChange={(value) => handleInputChange('region', value)}>
+                <Select
+                  value={formData.region}
+                  onValueChange={(value) => handleInputChange("region", value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select region" />
                   </SelectTrigger>
                   <SelectContent>
                     {regions.map((region) => (
-                      <SelectItem key={region} value={region}>{region}</SelectItem>
+                      <SelectItem key={region} value={region}>
+                        {region}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
 
               {/* Language */}
               <div>
                 <Label htmlFor="language">Message Language *</Label>
-                <Select value={formData.language} onValueChange={(value) => handleInputChange('language', value)} required>
+                <Select
+                  value={formData.language}
+                  onValueChange={(value) =>
+                    handleInputChange("language", value)
+                  }
+                  required
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select language" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="en">English</SelectItem>
                     <SelectItem value="zh">中文 (Chinese)</SelectItem>
-                    <SelectItem value="mixed">Mixed (English & Chinese)</SelectItem>
+                    <SelectItem value="mixed">
+                      Mixed (English & Chinese)
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -311,7 +396,7 @@ export default function MessagesNew() {
                 <Textarea
                   id="text"
                   value={formData.text}
-                  onChange={(e) => handleInputChange('text', e.target.value)}
+                  onChange={(e) => handleInputChange("text", e.target.value)}
                   placeholder="Share your heartfelt thank you message to the donors..."
                   className="min-h-32"
                   required
@@ -321,15 +406,33 @@ export default function MessagesNew() {
                 </p>
               </div>
 
-              {/* Donor Tag */}
+              {/* Regional Donor Tag
               <div>
-                <Label htmlFor="donor_tag">For a Specific Donor (Optional)</Label>
-                <Input
-                  id="donor_tag"
-                  value={formData.donor_tag}
-                  onChange={(e) => handleInputChange('donor_tag', e.target.value)}
-                  placeholder="e.g., Mr. Wong, ABC Company..."
+                <Label htmlFor="donors">For doners who donated to a specific region (Optional)</Label>
+                <Select value={formData.donorRegion} onValueChange={(value) => handleInputChange('donorRegion', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select region" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {regionsAll.map((region) => (
+                      <SelectItem key={region} value={region}>{region}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-text-muted mt-1">
+                  If this message is for donors who donated to a specific region
+                </p>
+              </div> */}
+
+              <div>
+                <Label htmlFor="donors">For a Specific Donor (Optional)</Label>
+                <MultiDonorSelect
+                  value={formData.donors}
+                  onChange={(newDonors) =>
+                    handleInputChange("donors", newDonors)
+                  }
                 />
+
                 <p className="text-sm text-text-muted mt-1">
                   If this message is for a specific donor or sponsor
                 </p>
@@ -337,8 +440,15 @@ export default function MessagesNew() {
 
               {/* Animation Type Selection */}
               <div>
-                <Label htmlFor="animation_type">How should your letter be delivered? ✨</Label>
-                <Select value={formData.animation_type} onValueChange={(value) => handleInputChange('animation_type', value)}>
+                <Label htmlFor="animation_type">
+                  How should your letter be delivered? ✨
+                </Label>
+                <Select
+                  value={formData.animation_type}
+                  onValueChange={(value) =>
+                    handleInputChange("animation_type", value)
+                  }
+                >
                   <SelectTrigger className="bg-gradient-to-r from-pink-50 to-blue-50">
                     <SelectValue placeholder="Choose delivery method" />
                   </SelectTrigger>
@@ -364,7 +474,9 @@ export default function MessagesNew() {
                     <SelectItem value="balloon">
                       <div className="flex items-center gap-2">
                         <span className="text-lg">🎈</span>
-                        <span>Balloon Delivery - Floats up to reveal message</span>
+                        <span>
+                          Balloon Delivery - Floats up to reveal message
+                        </span>
                       </div>
                     </SelectItem>
                     <SelectItem value="candy">
@@ -376,7 +488,8 @@ export default function MessagesNew() {
                   </SelectContent>
                 </Select>
                 <p className="text-sm text-text-muted mt-1">
-                  Choose how you want your message to appear to donors - make it special! 🌟
+                  Choose how you want your message to appear to donors - make it
+                  special! 🌟
                 </p>
               </div>
 
@@ -396,9 +509,12 @@ export default function MessagesNew() {
                     <div className="text-center">
                       <Upload className="h-8 w-8 mx-auto mb-2 text-text-muted" />
                       <p className="text-sm text-text-muted">
-                        Click to upload photos (JPG, PNG, WebP, max 5MB) or videos (MP4, max 25MB)
+                        Click to upload photos (JPG, PNG, WebP, max 5MB) or
+                        videos (MP4, max 25MB)
                       </p>
-                      <p className="text-xs text-text-muted mt-1">Maximum 5 files</p>
+                      <p className="text-xs text-text-muted mt-1">
+                        Maximum 5 files
+                      </p>
                     </div>
                   </label>
                 </div>
@@ -407,9 +523,12 @@ export default function MessagesNew() {
                 {mediaFiles.length > 0 && (
                   <div className="mt-4 space-y-2">
                     {mediaFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-surface border rounded-lg">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 bg-surface border rounded-lg"
+                      >
                         <div className="flex items-center">
-                          {file.type.startsWith('image/') ? (
+                          {file.type.startsWith("image/") ? (
                             <FileImage className="h-4 w-4 mr-2 text-brand-primary" />
                           ) : (
                             <FileVideo className="h-4 w-4 mr-2 text-brand-primary" />
@@ -433,15 +552,18 @@ export default function MessagesNew() {
               {/* Consent Checkboxes */}
               <div className="space-y-4 p-4 bg-surface-soft rounded-lg">
                 <h4 className="font-semibold">Required Consent</h4>
-                
+
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="guardian-consent"
                     checked={formData.consent.guardian}
-                    onCheckedChange={(checked) => handleConsentChange('guardian', checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      handleConsentChange("guardian", checked as boolean)
+                    }
                   />
                   <Label htmlFor="guardian-consent" className="text-sm">
-                    I have guardian/parental consent to share this message and any media on behalf of the child
+                    I have guardian/parental consent to share this message and
+                    any media on behalf of the child
                   </Label>
                 </div>
 
@@ -449,7 +571,9 @@ export default function MessagesNew() {
                   <Checkbox
                     id="school-consent"
                     checked={formData.consent.school}
-                    onCheckedChange={(checked) => handleConsentChange('school', checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      handleConsentChange("school", checked as boolean)
+                    }
                   />
                   <Label htmlFor="school-consent" className="text-sm">
                     I have school approval to share this message publicly
@@ -460,10 +584,13 @@ export default function MessagesNew() {
                   <Checkbox
                     id="media-consent"
                     checked={formData.consent.media_release}
-                    onCheckedChange={(checked) => handleConsentChange('media_release', checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      handleConsentChange("media_release", checked as boolean)
+                    }
                   />
                   <Label htmlFor="media-consent" className="text-sm">
-                    I consent to the public display of any uploaded photos/videos for Project REACH's mission
+                    I consent to the public display of any uploaded
+                    photos/videos for Project REACH's mission
                   </Label>
                 </div>
               </div>
