@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, Crown, Medal, MapPin, TrendingUp, Users, DollarSign, Award } from "lucide-react";
+import { Trophy, Crown, Medal, MapPin, TrendingUp, Users, DollarSign, Award, AlertCircle, TrendingDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface District {
@@ -98,18 +98,41 @@ export function TopDonors() {
     );
   }
 
-  const getPodiumPosition = (index: number) => {
-    if (index === 0) return { height: 'h-32', bg: 'from-yellow-400 to-amber-500', border: 'border-yellow-300' };
-    if (index === 1) return { height: 'h-28', bg: 'from-gray-300 to-gray-400', border: 'border-gray-200' };
-    if (index === 2) return { height: 'h-24', bg: 'from-amber-600 to-orange-600', border: 'border-amber-500' };
-    return { height: 'h-20', bg: 'from-slate-100 to-slate-200', border: 'border-slate-300' };
-  };
-
   const getRankLabel = (index: number) => {
     if (index === 0) return '1st';
     if (index === 1) return '2nd';
     if (index === 2) return '3rd';
     return `${index + 1}th`;
+  };
+
+  const getDistrictStatus = (index: number, totalDistricts: number) => {
+    if (index <= 2) return 'top-performer';
+    if (index >= totalDistricts - 3) return 'needs-support';
+    return 'mid-tier';
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'top-performer': return <TrendingUp className="h-5 w-5 text-green-500" />;
+      case 'needs-support': return <AlertCircle className="h-5 w-5 text-orange-500" />;
+      default: return <TrendingDown className="h-5 w-5 text-blue-500" />;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'top-performer': return 'from-green-50 to-emerald-50 border-green-200';
+      case 'needs-support': return 'from-orange-50 to-red-50 border-orange-200';
+      default: return 'from-blue-50 to-slate-50 border-blue-200';
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'top-performer': return 'Top Performer';
+      case 'needs-support': return 'Needs Support';
+      default: return 'Mid Tier';
+    }
   };
 
   return (
@@ -179,75 +202,129 @@ export function TopDonors() {
               </div>
             )}
 
-            {/* Leaderboard Table for All Districts */}
+            {/* District Cards Grid */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-700 mb-4">📊 Complete Rankings</h3>
-              <div className="bg-gray-50 rounded-xl p-4">
-                <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-600 mb-3 px-4">
-                  <div className="col-span-1">Rank</div>
-                  <div className="col-span-4">District</div>
-                  <div className="col-span-2 text-center">Donations</div>
-                  <div className="col-span-2 text-center">Lives Impacted</div>
-                  <div className="col-span-3 text-right">Total Amount</div>
-                </div>
-                
-                <div className="space-y-2">
-                  {districts.map((district, index) => (
-                    <div 
-                      key={district.district_name} 
-                      className={`
-                        grid grid-cols-12 gap-4 items-center p-4 rounded-lg transition-all duration-200 hover:bg-white hover:shadow-sm
-                        ${index <= 2 ? 'bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200' : 'bg-white border border-gray-100'}
-                      `}
-                    >
-                      {/* Rank */}
-                      <div className="col-span-1">
-                        <div className={`
-                          w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white
-                          ${index === 0 ? 'bg-gradient-to-r from-yellow-400 to-amber-500' :
-                            index === 1 ? 'bg-gradient-to-r from-gray-400 to-gray-500' :
-                            index === 2 ? 'bg-gradient-to-r from-amber-600 to-orange-600' :
-                            'bg-gradient-to-r from-slate-400 to-slate-500'}
-                        `}>
-                          {index + 1}
+              <h3 className="text-lg font-semibold text-gray-700 mb-4">📊 All Districts</h3>
+              
+              {/* Top Performers Section */}
+              <div className="mb-6">
+                <h4 className="text-md font-medium text-green-700 mb-3 flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4" />
+                  Top Performers
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {districts.slice(0, 3).map((district, index) => (
+                    <Card key={district.district_name} className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-md transition-all duration-200">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            {index === 0 && <Crown className="h-5 w-5 text-yellow-500" />}
+                            {index === 1 && <Medal className="h-5 w-5 text-gray-400" />}
+                            {index === 2 && <Trophy className="h-5 w-5 text-amber-600" />}
+                            <span className="text-sm font-bold text-green-600">#{index + 1}</span>
+                          </div>
+                          <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Top Performer</span>
                         </div>
-                      </div>
-                      
-                      {/* District Name */}
-                      <div className="col-span-4">
-                        <p className="font-semibold text-gray-800">{district.district_name}</p>
-                        <p className="text-xs text-gray-500">{getRankLabel(index)} place</p>
-                      </div>
-                      
-                      {/* Donation Count */}
-                      <div className="col-span-2 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <DollarSign className="h-4 w-4 text-green-500" />
-                          <span className="font-medium">{district.donation_count}</span>
+                        <h3 className="font-semibold text-gray-800 mb-2">{district.district_name}</h3>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Donors:</span>
+                            <span className="font-medium">{district.donation_count}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Lives Impacted:</span>
+                            <span className="font-medium">{district.lives_impacted}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Total:</span>
+                            <span className="font-bold text-green-600">${district.total_amount.toLocaleString()}</span>
+                          </div>
                         </div>
-                      </div>
-                      
-                      {/* Lives Impacted */}
-                      <div className="col-span-2 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <Users className="h-4 w-4 text-blue-500" />
-                          <span className="font-medium">{district.lives_impacted}</span>
-                        </div>
-                      </div>
-                      
-                      {/* Total Amount */}
-                      <div className="col-span-3 text-right">
-                        <p className="text-lg font-bold text-green-600">
-                          ${(district.total_amount).toLocaleString()}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {((district.total_amount / districts[0]?.total_amount) * 100).toFixed(1)}% of leader
-                        </p>
-                      </div>
-                    </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               </div>
+
+              {/* Districts Needing Support Section */}
+              {districts.length > 3 && (
+                <div className="mb-6">
+                  <h4 className="text-md font-medium text-orange-700 mb-3 flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4" />
+                    Districts Needing Support
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {districts.slice(-3).reverse().map((district, index) => {
+                      const actualIndex = districts.length - 1 - index;
+                      return (
+                        <Card key={district.district_name} className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200 hover:shadow-md transition-all duration-200">
+                          <CardContent className="p-4">
+                            <div className="flex items-center justify-between mb-3">
+                              <span className="text-sm font-bold text-orange-600">#{actualIndex + 1}</span>
+                              <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full">Needs Support</span>
+                            </div>
+                            <h3 className="font-semibold text-gray-800 mb-2">{district.district_name}</h3>
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Donors:</span>
+                                <span className="font-medium">{district.donation_count}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Lives Impacted:</span>
+                                <span className="font-medium">{district.lives_impacted}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Total:</span>
+                                <span className="font-bold text-orange-600">${district.total_amount.toLocaleString()}</span>
+                              </div>
+                            </div>
+                            <div className="mt-3 p-2 bg-orange-100 rounded text-xs text-orange-700">
+                              💡 This district could benefit from more donor outreach
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Mid Tier Districts */}
+              {districts.length > 6 && (
+                <div>
+                  <h4 className="text-md font-medium text-blue-700 mb-3 flex items-center gap-2">
+                    <TrendingDown className="h-4 w-4" />
+                    Mid Tier Districts
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {districts.slice(3, -3).map((district, index) => (
+                      <Card key={district.district_name} className="bg-gradient-to-r from-blue-50 to-slate-50 border-blue-200 hover:shadow-md transition-all duration-200">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-sm font-bold text-blue-600">#{index + 4}</span>
+                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Mid Tier</span>
+                          </div>
+                          <h3 className="font-semibold text-gray-800 mb-2">{district.district_name}</h3>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Donors:</span>
+                              <span className="font-medium">{district.donation_count}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Lives Impacted:</span>
+                              <span className="font-medium">{district.lives_impacted}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Total:</span>
+                              <span className="font-bold text-blue-600">${district.total_amount.toLocaleString()}</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
