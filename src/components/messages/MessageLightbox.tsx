@@ -3,29 +3,36 @@ import { X, MapPin, Calendar, Languages, Heart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { InstagramPostGenerator } from "./InstagramPostGenerator";
+import { PostGenerator } from "./PostGenerator";
 
 interface Message {
   id: string;
   child_alias: string;
-  school: string;
   region: string;
   language: string;
   text: string;
   media_urls: string[];
   media_types: string[];
-  donor_tag: string;
+  donors: string[];
   created_at: string;
   animation_type: string;
+  type: string;
+  school: string;
 }
 
 interface MessageLightboxProps {
   message: Message | null;
   isOpen: boolean;
   onClose: () => void;
+  donorName: string;
 }
 
-export function MessageLightbox({ message, isOpen, onClose }: MessageLightboxProps) {
+export function MessageLightbox({
+  message,
+  isOpen,
+  onClose,
+  donorName,
+}: MessageLightboxProps) {
   if (!message) return null;
 
   const getTimeAgo = (dateString: string) => {
@@ -50,54 +57,49 @@ export function MessageLightbox({ message, isOpen, onClose }: MessageLightboxPro
         await navigator.share({
           title: `Thank you letter from ${message.child_alias}`,
           text: shareText,
-          url: shareUrl
+          url: shareUrl,
         });
       } else {
         await navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`);
-        toast.success('Message copied to clipboard!');
+        toast.success("Message copied to clipboard!");
       }
     } catch (error) {
-      console.error('Error sharing:', error);
-      toast.error('Failed to share message');
+      console.error("Error sharing:", error);
+      toast.error("Failed to share message");
     }
-  };
-
-  const handleInstagramShare = () => {
-    // This is now handled by the InstagramPostGenerator component
-    toast.success('Use the Instagram button below to create a beautiful post!');
   };
 
   const getDeliveryAnimation = () => {
     switch (message.animation_type) {
-      case 'plane':
+      case "plane":
         return {
           initial: { x: -200, y: -100, rotate: -45, opacity: 0 },
           animate: { x: 0, y: 0, rotate: 0, opacity: 1 },
-          transition: { duration: 1.2, type: "spring" as const }
+          transition: { duration: 1.2, type: "spring" as const },
         };
-      case 'candy':
+      case "candy":
         return {
           initial: { scale: 0, rotate: 360, opacity: 0 },
           animate: { scale: 1, rotate: 0, opacity: 1 },
-          transition: { duration: 0.8, type: "spring" as const }
+          transition: { duration: 0.8, type: "spring" as const },
         };
-      case 'heart':
+      case "heart":
         return {
           initial: { scale: 0, opacity: 0 },
           animate: { scale: [0, 1.2, 1], opacity: 1 },
-          transition: { duration: 0.6 }
+          transition: { duration: 0.6 },
         };
-      case 'balloon':
+      case "balloon":
         return {
           initial: { y: 100, opacity: 0 },
           animate: { y: [100, -10, 0], opacity: 1 },
-          transition: { duration: 1, type: "spring" as const }
+          transition: { duration: 1, type: "spring" as const },
         };
       default:
         return {
           initial: { scale: 0.8, opacity: 0 },
           animate: { scale: 1, opacity: 1 },
-          transition: { duration: 0.4 }
+          transition: { duration: 0.4 },
         };
     }
   };
@@ -126,21 +128,21 @@ export function MessageLightbox({ message, isOpen, onClose }: MessageLightboxPro
                 className="absolute text-2xl"
                 style={{
                   left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`
+                  top: `${Math.random() * 100}%`,
                 }}
                 animate={{
                   y: [0, -20, 0],
                   rotate: [0, 180, 360],
-                  opacity: [0.5, 1, 0.5]
+                  opacity: [0.5, 1, 0.5],
                 }}
                 transition={{
                   duration: 3,
                   delay: i * 0.1,
                   repeat: Infinity,
-                  ease: "easeInOut"
+                  ease: "easeInOut",
                 }}
               >
-                {['✨', '🌟', '💫', '⭐', '🎈', '🎊'][i % 6]}
+                {["✨", "🌟", "💫", "⭐", "🎈", "🎊"][i % 6]}
               </motion.div>
             ))}
           </motion.div>
@@ -194,13 +196,11 @@ export function MessageLightbox({ message, isOpen, onClose }: MessageLightboxPro
                   From: {message.child_alias}
                 </h2>
                 <div className="flex items-center justify-center gap-4 text-text-muted">
-                  {message.school && (
-                    <div className="flex items-center">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      {message.school}
-                      {message.region && `, ${message.region}`}
-                    </div>
-                  )}
+                  <div className="flex items-center">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    {message.region}
+                  </div>
+
                   <div className="flex items-center">
                     <Calendar className="h-4 w-4 mr-1" />
                     {getTimeAgo(message.created_at)}
@@ -215,13 +215,13 @@ export function MessageLightbox({ message, isOpen, onClose }: MessageLightboxPro
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.7, duration: 0.5 }}
               >
-                <p 
+                <p
                   className="text-xl leading-relaxed text-text"
                   style={{ fontFamily: "'Kalam', cursive" }}
                 >
                   &quot;{message.text}&quot;
                 </p>
-                
+
                 {/* Cute doodles around the text */}
                 <div className="absolute top-2 right-4 text-2xl">🌈</div>
                 <div className="absolute bottom-2 left-4 text-xl">⭐</div>
@@ -239,7 +239,7 @@ export function MessageLightbox({ message, isOpen, onClose }: MessageLightboxPro
                   {message.media_urls.map((url, index) => (
                     <div key={index} className="relative">
                       <div className="bg-white p-4 rounded-lg shadow-lg transform rotate-1 hover:rotate-0 transition-transform">
-                        {message.media_types[index] === 'image' ? (
+                        {message.media_types[index] === "image" ? (
                           <img
                             src={`/${url}`}
                             alt="Child's drawing"
@@ -272,17 +272,24 @@ export function MessageLightbox({ message, isOpen, onClose }: MessageLightboxPro
               >
                 <Badge className="bg-brand-primary text-white">
                   <Languages className="h-3 w-3 mr-1" />
-                  {message.language === 'en' ? 'English' : message.language === 'zh' ? '中文' : 'Mixed'}
+                  {message.language === "en"
+                    ? "English"
+                    : message.language === "zh"
+                    ? "中文"
+                    : "Mixed"}
                 </Badge>
 
-                {message.donor_tag && (
+                {(message.donors?.length > 0) && (
                   <Badge className="bg-red-100 text-red-700 border border-red-200">
                     <Heart className="h-3 w-3 mr-1" />
-                    Special message for: {message.donor_tag}
+                    Special message for: {donorName}
                   </Badge>
                 )}
 
-                <Badge variant="outline" className="bg-yellow-50 border-yellow-200">
+                <Badge
+                  variant="outline"
+                  className="bg-yellow-50 border-yellow-200"
+                >
                   Delivered via {message.animation_type} ✨
                 </Badge>
               </motion.div>
@@ -296,13 +303,14 @@ export function MessageLightbox({ message, isOpen, onClose }: MessageLightboxPro
               >
                 <div className="p-4 bg-gradient-to-r from-brand-primary/10 to-brand-secondary/10 rounded-lg">
                   <p className="text-brand-primary font-semibold text-lg">
-                    Thank you for making a difference in {message.child_alias}&apos;s life! 🌟
+                    Thank you for making a difference in {message.child_alias}
+                    &apos;s life! 🌟
                   </p>
                 </div>
-                
+
                 {/* Instagram Post Generator */}
                 <div className="flex justify-center">
-                  <InstagramPostGenerator message={message} />
+                  <PostGenerator message={message} />
                 </div>
               </motion.div>
             </div>

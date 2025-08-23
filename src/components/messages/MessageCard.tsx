@@ -14,7 +14,8 @@ interface Message {
   text: string;
   media_urls: string[];
   media_types: string[];
-  donor_tag: string;
+  donors: string[];
+  type: string,
   created_at: string;
   animation_type: string;
 }
@@ -135,12 +136,12 @@ export function MessageCard({ message, onOpen, index }: MessageCardProps) {
                 {message.language === "en" ? "English" : message.language === "zh" ? "中文" : "Mixed"}
               </Badge>
               
-              {message.donor_tag && (
-                <Badge 
-                  variant="outline" 
+              {Array.isArray(message.donors) && message.donors.length > 0 && (
+                <Badge
+                  variant="outline"
                   className="text-xs bg-yellow-100 text-orange-600 border-orange-200"
                 >
-                  💖 For: {message.donor_tag}
+                  💖 For: {message.donors.filter(Boolean).join(', ')}
                 </Badge>
               )}
 

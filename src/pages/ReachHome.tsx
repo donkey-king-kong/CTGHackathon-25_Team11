@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ReachHeader } from "@/components/ReachHeader";
 import { VideoShowcase } from "@/components/sections/VideoShowcase";
+import YouTubeVideoShowcase from "@/components/sections/YouTubeVideoShowcase";
 
 export default function ReachHome() {
   return (
@@ -116,7 +117,7 @@ export default function ReachHome() {
       </section>
 
       {/* Video Showcase Section */}
-      <VideoShowcase />
+      <YouTubeVideoShowcase />
 
       {/* Festival Banner - Children's Character Festival 2026 */}
       <section className="py-16 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500">

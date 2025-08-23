@@ -13,7 +13,7 @@ import WhatWeDo from "./pages/WhatWeDo";
 import Messages from "./pages/Messages";
 import MessagesNew from "./pages/MessagesNew";
 import MessagesModerate from "./pages/MessagesModerate";
-import KidsUpload from "./pages/KidsUpload";
+import MessagesUpload from "./pages/MessagesUpload";
 import Auth from "./pages/Auth";
 import ReachHome from "./pages/ReachHome";
 import ReachAbout from "./pages/ReachAbout";
@@ -48,7 +48,7 @@ const App = () => (
             <Route path="/messages" element={<Messages />} />
             <Route path="/messages/new" element={<MessagesNew />} />
             <Route path="/messages/moderate" element={<MessagesModerate />} />
-            <Route path="/kids-upload" element={<KidsUpload />} />
+            <Route path="/messages-upload" element={<MessagesUpload />} />
             
             {/* Authentication */}
             <Route path="/auth" element={<Auth />} />
