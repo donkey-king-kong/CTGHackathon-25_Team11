@@ -3,75 +3,98 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
-import { Upload, X, FileImage, FileVideo, Sparkles, Star, Heart } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Upload,
+  X,
+  FileImage,
+  FileVideo,
+  Sparkles,
+  Star,
+  Heart,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { MultiDonorSelect } from "@/components/messages/DonorSearch";
 
 interface FormData {
   child_alias: string;
-  school: string;
-  region: string;
+  // region: string;
   language: string;
   text: string;
-  donor_tag: string;
+  donors: string[];
   animation_type: string;
   consent: {
     guardian: boolean;
     school: boolean;
     media_release: boolean;
   };
+  privacy: string;
 }
 
-export default function KidsUpload() {
+export default function MessagesUpload() {
   const [formData, setFormData] = useState<FormData>({
     child_alias: "",
-    school: "",
-    region: "",
+    // region: "",
     language: "",
     text: "",
-    donor_tag: "",
-    animation_type: "balloon",
+    donors: [],
+    animation_type: "letterbox",
     consent: {
       guardian: false,
       school: false,
       media_release: false,
     },
+    privacy: "general",
   });
-  
+
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
-  const regions = [
-    "Central & Western", "Eastern", "Southern", "Wan Chai",
-    "Kowloon City", "Kwun Tong", "Sham Shui Po", "Wong Tai Sin", "Yau Tsim Mong",
-    "Islands", "Kwai Tsing", "North", "Sai Kung", "Sha Tin", "Tai Po", "Tsuen Wan", "Tuen Mun", "Yuen Long"
-  ];
+  // const regions = [
+  //   "Central & Western", "Eastern", "Southern", "Wan Chai",
+  //   "Kowloon City", "Kwun Tong", "Sham Shui Po", "Wong Tai Sin", "Yau Tsim Mong",
+  //   "Islands", "Kwai Tsing", "North", "Sai Kung", "Sha Tin", "Tai Po", "Tsuen Wan", "Tuen Mun", "Yuen Long"
+  // ];
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleConsentChange = (field: keyof FormData['consent'], checked: boolean) => {
-    setFormData(prev => ({
+  const handleConsentChange = (
+    field: keyof FormData["consent"],
+    checked: boolean
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      consent: { ...prev.consent, [field]: checked }
+      consent: { ...prev.consent, [field]: checked },
     }));
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
-    
-    const validFiles = files.filter(file => {
-      const isImage = file.type.startsWith('image/') && ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
-      const isVideo = file.type.startsWith('video/') && file.type === 'video/mp4';
-      const validSize = isImage ? file.size <= 5 * 1024 * 1024 : file.size <= 25 * 1024 * 1024;
-      
+
+    const validFiles = files.filter((file) => {
+      const isImage =
+        file.type.startsWith("image/") &&
+        ["image/jpeg", "image/png", "image/webp"].includes(file.type);
+      const isVideo =
+        file.type.startsWith("video/") && file.type === "video/mp4";
+      const validSize = isImage
+        ? file.size <= 5 * 1024 * 1024
+        : file.size <= 25 * 1024 * 1024;
+
       if (!isImage && !isVideo) {
         toast({
           title: "Oops! 📷",
@@ -80,7 +103,7 @@ export default function KidsUpload() {
         });
         return false;
       }
-      
+
       if (!validSize) {
         toast({
           title: "File too big! 📦",
@@ -89,42 +112,47 @@ export default function KidsUpload() {
         });
         return false;
       }
-      
+
       return true;
     });
-    
-    setMediaFiles(prev => [...prev, ...validFiles].slice(0, 3)); // Max 3 files for kids
+
+    setMediaFiles((prev) => [...prev, ...validFiles].slice(0, 3)); // Max 3 files for kids
   };
 
   const removeFile = (index: number) => {
-    setMediaFiles(prev => prev.filter((_, i) => i !== index));
+    setMediaFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const uploadMedia = async (): Promise<{ urls: string[], types: string[] }> => {
+  const uploadMedia = async (): Promise<{
+    urls: string[];
+    types: string[];
+  }> => {
     const urls: string[] = [];
     const types: string[] = [];
-    
+
     for (const file of mediaFiles) {
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${file.name}`;
-      
+      const fileName = `${Date.now()}-${Math.random()
+        .toString(36)
+        .substring(7)}-${file.name}`;
+
       const { error: uploadError } = await supabase.storage
-        .from('message-media')
+        .from("message-media")
         .upload(fileName, file);
-        
+
       if (uploadError) {
         throw uploadError;
       }
-      
+
       urls.push(fileName);
-      types.push(file.type.startsWith('image/') ? 'image' : 'video');
+      types.push(file.type.startsWith("image/") ? "image" : "video");
     }
-    
+
     return { urls, types };
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.child_alias || !formData.text || !formData.language) {
       toast({
         title: "Almost there! 🌟",
@@ -133,51 +161,55 @@ export default function KidsUpload() {
       });
       return;
     }
-    
-    if (!formData.consent.guardian || !formData.consent.school || !formData.consent.media_release) {
+
+    if (
+      !formData.consent.guardian ||
+      !formData.consent.school ||
+      !formData.consent.media_release
+    ) {
       toast({
         title: "Permission needed 👆",
-        description: "Please check all the permission boxes with your grown-up!",
+        description:
+          "Please check all the permission boxes with your grown-up!",
         variant: "destructive",
       });
       return;
     }
-    
+
     setUploading(true);
-    
+
     try {
       let mediaData = { urls: [] as string[], types: [] as string[] };
-      
+
       if (mediaFiles.length > 0) {
         mediaData = await uploadMedia();
       }
-      
-      const { error } = await supabase
-        .from('messages')
-        .insert([{
+
+      const { error } = await supabase.from("messages").insert([
+        {
           child_alias: formData.child_alias,
-          school: formData.school || null,
-          region: formData.region || null,
           language: formData.language,
+          // region: formData.region,
           text: formData.text,
           media_urls: mediaData.urls,
           media_types: mediaData.types,
-          donor_tag: formData.donor_tag || null,
+          donors: formData.donors || null,
           animation_type: formData.animation_type,
           consent: formData.consent,
-          status: 'pending'
-        }]);
-        
+          type: formData.privacy,
+        },
+      ]);
+
       if (error) throw error;
-      
+
       setSubmitted(true);
       toast({
         title: "Yay! Message sent! 🎉",
-        description: "Your thank you message will be shared with the donors soon!",
+        description:
+          "Your thank you message will be shared with the donors soon!",
       });
-      
     } catch (error) {
-      console.error('Error submitting message:', error);
+      console.error("Error submitting message:", error);
       toast({
         title: "Oops! Something went wrong 😅",
         description: "Let's try again! Ask a grown-up if you need help.",
@@ -205,19 +237,21 @@ export default function KidsUpload() {
               >
                 🎉
               </motion.div>
-              <h2 className="text-3xl font-bold mb-4 text-purple-600">Amazing! 🌟</h2>
+              <h2 className="text-3xl font-bold mb-4 text-purple-600">
+                Amazing! 🌟
+              </h2>
               <p className="text-lg mb-6 text-gray-700">
-                Your beautiful thank you message has been sent! 💌
-                The kind people who helped you will be so happy to read it! 
+                Your beautiful thank you message has been sent! 💌 The kind
+                people who helped you will be so happy to read it!
               </p>
               <div className="space-y-3">
-                <Button 
-                  onClick={() => window.location.href = '/messages'}
+                <Button
+                  onClick={() => (window.location.href = "/messages")}
                   className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg py-3"
                 >
                   See All Messages 📬
                 </Button>
-                <Button 
+                <Button
                   variant="outline"
                   onClick={() => window.location.reload()}
                   className="w-full border-purple-300 text-purple-600 hover:bg-purple-50 text-lg py-3"
@@ -237,14 +271,22 @@ export default function KidsUpload() {
       {/* Fun Header */}
       <section className="py-16 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="animate-pulse absolute top-10 left-10 text-4xl">⭐</div>
-          <div className="animate-pulse absolute top-20 right-20 text-3xl delay-1000">🌟</div>
-          <div className="animate-pulse absolute bottom-10 left-20 text-5xl delay-500">✨</div>
-          <div className="animate-pulse absolute bottom-20 right-10 text-4xl delay-1500">💫</div>
+          <div className="animate-pulse absolute top-10 left-10 text-4xl">
+            ⭐
+          </div>
+          <div className="animate-pulse absolute top-20 right-20 text-3xl delay-1000">
+            🌟
+          </div>
+          <div className="animate-pulse absolute bottom-10 left-20 text-5xl delay-500">
+            ✨
+          </div>
+          <div className="animate-pulse absolute bottom-20 right-10 text-4xl delay-1500">
+            💫
+          </div>
         </div>
-        
+
         <div className="container mx-auto px-6 relative">
-          <motion.div 
+          <motion.div
             className="text-center text-white max-w-4xl mx-auto"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -252,7 +294,7 @@ export default function KidsUpload() {
           >
             <div className="text-7xl mb-6">💌</div>
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Send a Thank You Message! 
+              Send a Thank You Message!
             </h1>
             <p className="text-xl md:text-2xl opacity-90">
               Share your happy feelings with the kind people who helped you! 🥰
@@ -262,25 +304,70 @@ export default function KidsUpload() {
       </section>
 
       <div className="container mx-auto px-6 py-12">
-        <motion.form 
-          onSubmit={handleSubmit} 
+        <motion.form
+          onSubmit={handleSubmit}
           className="max-w-2xl mx-auto"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <Card className="bg-white/90 backdrop-blur-sm border-2 border-purple-200 shadow-xl">
+            <CardHeader className="flex">
+              <div className="flex items-start gap-2">
+                <Heart className="h-5 w-5 text-brand-primary" />
+                <span className="font-semibold text-lg">Message Details</span>
+              </div>
+
+              {/* Right side: toggle with labels */}
+              <div className="flex items-end align gap-2">
+                <span className="text-sm text-text-muted">Private</span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      privacy:
+                        prev.privacy === "general" ? "specific" : "general",
+                    }))
+                  }
+                  className={`relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out ${
+                    formData.privacy === "general"
+                      ? "bg-green-700"
+                      : "bg-gray-500"
+                  }`}
+                  aria-pressed={formData.privacy === "general"}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition-transform duration-200 ease-in-out ${
+                      formData.privacy === "general"
+                        ? "translate-x-5"
+                        : "translate-x-1"
+                    }`}
+                  />
+                </button>
+
+                <span className="text-sm text-text-muted">Public</span>
+                <p className="text-sm text-text-muted mt-1">
+                  Private notes are only visible to addressed donors.
+                </p>
+              </div>
+            </CardHeader>
             <CardContent className="p-8 space-y-6">
               {/* Name */}
               <div>
-                <Label htmlFor="child_alias" className="text-lg font-bold text-purple-600 flex items-center">
+                <Label
+                  htmlFor="child_alias"
+                  className="text-lg font-bold text-purple-600 flex items-center"
+                >
                   <Star className="h-5 w-5 mr-2" />
                   What's your name or nickname? ✨
                 </Label>
                 <Input
                   id="child_alias"
                   value={formData.child_alias}
-                  onChange={(e) => handleInputChange('child_alias', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("child_alias", e.target.value)
+                  }
                   placeholder="e.g., Little Emma, Kai, Rainbow... 🌈"
                   className="mt-2 text-lg p-4 border-2 border-purple-200 rounded-xl focus:border-purple-400"
                   required
@@ -291,22 +378,8 @@ export default function KidsUpload() {
                 </p>
               </div>
 
-              {/* School */}
-              <div>
-                <Label htmlFor="school" className="text-lg font-bold text-blue-600">
-                  🏫 What school do you go to?
-                </Label>
-                <Input
-                  id="school"
-                  value={formData.school}
-                  onChange={(e) => handleInputChange('school', e.target.value)}
-                  placeholder="Your school name 🎒"
-                  className="mt-2 text-lg p-4 border-2 border-blue-200 rounded-xl focus:border-blue-400"
-                />
-              </div>
-
               {/* Region */}
-              <div>
+              {/* <div>
                 <Label htmlFor="region" className="text-lg font-bold text-green-600">
                   🗺️ Where do you live in Hong Kong?
                 </Label>
@@ -320,35 +393,55 @@ export default function KidsUpload() {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
 
               {/* Language */}
               <div>
-                <Label htmlFor="language" className="text-lg font-bold text-orange-600 flex items-center">
-                  🌍 What language will you use? <span className="text-red-500 ml-1">*</span>
+                <Label
+                  htmlFor="language"
+                  className="text-lg font-bold text-orange-600 flex items-center"
+                >
+                  🌍 What language will you use?{" "}
+                  <span className="text-red-500 ml-1">*</span>
                 </Label>
-                <Select value={formData.language} onValueChange={(value) => handleInputChange('language', value)} required>
+                <Select
+                  value={formData.language}
+                  onValueChange={(value) =>
+                    handleInputChange("language", value)
+                  }
+                  required
+                >
                   <SelectTrigger className="mt-2 text-lg p-4 border-2 border-orange-200 rounded-xl focus:border-orange-400">
                     <SelectValue placeholder="Choose your language 🗣️" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="en" className="text-lg">🇬🇧 English</SelectItem>
-                    <SelectItem value="zh" className="text-lg">🇨🇳 中文 (Chinese)</SelectItem>
-                    <SelectItem value="mixed" className="text-lg">🌟 Both Languages!</SelectItem>
+                    <SelectItem value="en" className="text-lg">
+                      🇬🇧 English
+                    </SelectItem>
+                    <SelectItem value="zh" className="text-lg">
+                      🇨🇳 中文 (Chinese)
+                    </SelectItem>
+                    <SelectItem value="mixed" className="text-lg">
+                      🌟 Both Languages!
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Message */}
               <div>
-                <Label htmlFor="text" className="text-lg font-bold text-pink-600 flex items-center">
+                <Label
+                  htmlFor="text"
+                  className="text-lg font-bold text-pink-600 flex items-center"
+                >
                   <Heart className="h-5 w-5 mr-2" />
-                  Your Thank You Message <span className="text-red-500 ml-1">*</span>
+                  Your Thank You Message{" "}
+                  <span className="text-red-500 ml-1">*</span>
                 </Label>
                 <Textarea
                   id="text"
                   value={formData.text}
-                  onChange={(e) => handleInputChange('text', e.target.value)}
+                  onChange={(e) => handleInputChange("text", e.target.value)}
                   placeholder="Tell the kind people how their help made you happy! Write about what you learned, how you feel, or anything you want to say! 😊"
                   className="mt-2 text-lg p-4 border-2 border-pink-200 rounded-xl focus:border-pink-400 min-h-32"
                   required
@@ -358,12 +451,34 @@ export default function KidsUpload() {
                 </p>
               </div>
 
+              <div>
+                <Label htmlFor="donors">For a Specific Donor (Optional)</Label>
+                <MultiDonorSelect
+                  value={formData.donors}
+                  onChange={(newDonors) =>
+                    handleInputChange("donors", newDonors)
+                  }
+                />
+
+                <p className="text-sm text-text-muted mt-1">
+                  If this message is for a specific donor or sponsor
+                </p>
+              </div>
+
               {/* Animation Type */}
               <div>
-                <Label htmlFor="animation_type" className="text-lg font-bold text-indigo-600">
+                <Label
+                  htmlFor="animation_type"
+                  className="text-lg font-bold text-indigo-600"
+                >
                   🎬 How should your message arrive?
                 </Label>
-                <Select value={formData.animation_type} onValueChange={(value) => handleInputChange('animation_type', value)}>
+                <Select
+                  value={formData.animation_type}
+                  onValueChange={(value) =>
+                    handleInputChange("animation_type", value)
+                  }
+                >
                   <SelectTrigger className="mt-2 text-lg p-4 border-2 border-indigo-200 rounded-xl focus:border-indigo-400">
                     <SelectValue placeholder="Pick something fun! ✨" />
                   </SelectTrigger>
@@ -386,13 +501,16 @@ export default function KidsUpload() {
                   </SelectContent>
                 </Select>
                 <p className="text-sm text-indigo-500 mt-2">
-                  🌟 Choose how you want your message to appear - make it special!
+                  🌟 Choose how you want your message to appear - make it
+                  special!
                 </p>
               </div>
 
               {/* Media Upload */}
               <div>
-                <Label className="text-lg font-bold text-teal-600">📸 Add Photos or Videos (if you want!)</Label>
+                <Label className="text-lg font-bold text-teal-600">
+                  📸 Add Photos or Videos (if you want!)
+                </Label>
                 <div className="border-2 border-dashed border-teal-200 rounded-xl p-6 mt-2 bg-teal-50/50">
                   <input
                     type="file"
@@ -419,14 +537,19 @@ export default function KidsUpload() {
                 {mediaFiles.length > 0 && (
                   <div className="mt-4 space-y-2">
                     {mediaFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-white border-2 border-teal-200 rounded-lg">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 bg-white border-2 border-teal-200 rounded-lg"
+                      >
                         <div className="flex items-center">
-                          {file.type.startsWith('image/') ? (
+                          {file.type.startsWith("image/") ? (
                             <FileImage className="h-5 w-5 mr-2 text-teal-500" />
                           ) : (
                             <FileVideo className="h-5 w-5 mr-2 text-teal-500" />
                           )}
-                          <span className="text-sm font-medium">{file.name}</span>
+                          <span className="text-sm font-medium">
+                            {file.name}
+                          </span>
                         </div>
                         <Button
                           type="button"
@@ -448,17 +571,23 @@ export default function KidsUpload() {
                 <h4 className="text-lg font-bold text-yellow-700 flex items-center">
                   👨‍👩‍👧‍👦 Ask a grown-up to help with this part!
                 </h4>
-                
+
                 <div className="space-y-3">
                   <div className="flex items-start space-x-3">
                     <Checkbox
                       id="guardian-consent"
                       checked={formData.consent.guardian}
-                      onCheckedChange={(checked) => handleConsentChange('guardian', checked as boolean)}
+                      onCheckedChange={(checked) =>
+                        handleConsentChange("guardian", checked as boolean)
+                      }
                       className="mt-1"
                     />
-                    <Label htmlFor="guardian-consent" className="text-sm leading-relaxed">
-                      👨‍👩‍👧‍👦 My parent/guardian says it's okay to share this message and photos/videos
+                    <Label
+                      htmlFor="guardian-consent"
+                      className="text-sm leading-relaxed"
+                    >
+                      👨‍👩‍👧‍👦 I have guardian/parental consent to share this message
+                      and any media on behalf of the child
                     </Label>
                   </div>
 
@@ -466,11 +595,16 @@ export default function KidsUpload() {
                     <Checkbox
                       id="school-consent"
                       checked={formData.consent.school}
-                      onCheckedChange={(checked) => handleConsentChange('school', checked as boolean)}
+                      onCheckedChange={(checked) =>
+                        handleConsentChange("school", checked as boolean)
+                      }
                       className="mt-1"
                     />
-                    <Label htmlFor="school-consent" className="text-sm leading-relaxed">
-                      🏫 My school says it's okay to share this message
+                    <Label
+                      htmlFor="school-consent"
+                      className="text-sm leading-relaxed"
+                    >
+                      🏫 I have school approval to share this message publicly
                     </Label>
                   </div>
 
@@ -478,11 +612,17 @@ export default function KidsUpload() {
                     <Checkbox
                       id="media-consent"
                       checked={formData.consent.media_release}
-                      onCheckedChange={(checked) => handleConsentChange('media_release', checked as boolean)}
+                      onCheckedChange={(checked) =>
+                        handleConsentChange("media_release", checked as boolean)
+                      }
                       className="mt-1"
                     />
-                    <Label htmlFor="media-consent" className="text-sm leading-relaxed">
-                      📺 It's okay to show my photos/videos to help other children
+                    <Label
+                      htmlFor="media-consent"
+                      className="text-sm leading-relaxed"
+                    >
+                      📺 I consent to the public display of any uploaded
+                      photos/videos for Project REACH's mission
                     </Label>
                   </div>
                 </div>
@@ -511,10 +651,6 @@ export default function KidsUpload() {
                   )}
                 </Button>
               </motion.div>
-
-              <p className="text-sm text-center text-gray-500">
-                🌟 Your message will be checked by grown-ups before being shared! 🌟
-              </p>
             </CardContent>
           </Card>
         </motion.form>
