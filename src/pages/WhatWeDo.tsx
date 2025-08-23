@@ -138,9 +138,9 @@ export default function WhatWeDo() {
         {/* The Problem Section */}
         <motion.section 
           className="mb-20"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
         >
           <h2 className="text-3xl font-bold text-center mb-12 text-reach-green">The Challenge We Face</h2>
           <div className="max-w-4xl mx-auto">
@@ -212,9 +212,9 @@ export default function WhatWeDo() {
             {/* Kindergarten Crisis Section with Visual */}
             <motion.div 
               className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 p-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
             >
               <div className="flex items-center mb-4">
                 <GraduationCap className="h-6 w-6 text-green-600 mr-3" />
