@@ -3,7 +3,7 @@ import { X, MapPin, Calendar, Languages, Heart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { InstagramPostGenerator } from "./InstagramPostGenerator";
+import { PostGenerator } from "./PostGenerator";
 
 interface Message {
   id: string;
@@ -314,7 +314,7 @@ export function MessageLightbox({
 
                 {/* Instagram Post Generator */}
                 <div className="flex justify-center">
-                  <InstagramPostGenerator message={message} />
+                  <PostGenerator message={message} />
                 </div>
               </motion.div>
             </div>
