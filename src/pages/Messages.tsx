@@ -83,14 +83,15 @@ export default function Messages() {
 
   useEffect(() => {
     filterMessages();
-  }, [messages, searchQuery, regionFilter, languageFilter, currentTab, user]);
+  }, [messages, searchQuery, regionFilter, languageFilter, currentTab, 
+    user
+  ]);
 
   const fetchMessages = async () => {
     try {
       let query = supabase
         .from("messages")
         .select("*")
-        .eq("type", "general")
         .order("created_at", { ascending: false });
 
       const { data, error } = await query;
@@ -124,11 +125,11 @@ export default function Messages() {
     if (currentTab === "personal") {
       // Fetch messsages tagged to this specific user and general messages
       filtered = filtered.filter(
-        (message) => user && (message.donors.includes(user.id) || message.donors.length == 0)
+        (message) => user && (message.donors?.includes(user.id))
       );
     } else {
       // Show only general messages
-      filtered = filtered.filter((message) => message.donors.length == 0);
+      filtered = filtered.filter((message) => message.donors?.length == 0);
     }
 
     if (searchQuery) {
@@ -251,7 +252,7 @@ export default function Messages() {
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-muted h-4 w-4" />
                 <Input
-                  placeholder="Search letters by message, name, or school..."
+                  placeholder="Search letters by message or name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 bg-white/90 border-brand-primary/20 focus:border-brand-primary"
@@ -344,7 +345,7 @@ export default function Messages() {
                       message={message}
                       onOpen={openMessage}
                       index={index}
-                      donorName={user?.id?.split("@")[0] || "You"}
+                      donorName={user?.full_name.split(" ")[0] || "You"}
                     />
                   ) : (
                     <MessageCard
@@ -361,7 +362,7 @@ export default function Messages() {
         </section>
 
         {/* CTA Section */}
-        {user && user.role == 'admin' && (
+        {user?.role == 'admin' && (
           <motion.section
           className="py-20 bg-gradient-to-r from-brand-primary to-brand-secondary"
           initial={{ opacity: 0 }}
@@ -404,6 +405,7 @@ export default function Messages() {
         message={selectedMessage}
         isOpen={isLightboxOpen}
         onClose={closeMessage}
+        donorName={user?.full_name.split(" ")[0] || "You"}
       />
 
     </div>
