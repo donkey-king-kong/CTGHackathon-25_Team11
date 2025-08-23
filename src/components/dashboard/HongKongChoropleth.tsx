@@ -515,18 +515,25 @@ export function HongKongChoropleth() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Card className="border-l-4" style={{ borderLeftColor: district.color }}>
+                <Card className={`border-l-4 ${district.color === '#dc2626' ? 'border-red-500 bg-red-50 shadow-lg ring-2 ring-red-200 ring-opacity-50' : ''}`} 
+                      style={{ borderLeftColor: district.color }}>
                   <CardContent className="p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <MapPin className="h-4 w-4" style={{ color: district.color }} />
-                      <span className="text-sm font-medium">{district.district_name}</span>
+                      <span className={`text-sm font-medium ${district.color === '#dc2626' ? 'text-red-800 font-semibold' : ''}`}>
+                        {district.district_name}
+                      </span>
                     </div>
-                    <p className="text-2xl font-bold mb-1">
+                    <p className={`text-2xl font-bold mb-1 ${district.color === '#dc2626' ? 'text-red-700' : ''}`}>
                       ${district.total_donations.toLocaleString()}
                     </p>
-                    <p className="text-xs text-muted-foreground mb-2">Total Donations</p>
+                    <p className={`text-xs mb-2 ${district.color === '#dc2626' ? 'text-red-600' : 'text-muted-foreground'}`}>
+                      Total Donations
+                    </p>
                     <div className="flex justify-between text-xs">
-                      <span>Donations: {district.donation_count}</span>
+                      <span className={district.color === '#dc2626' ? 'text-red-600 font-medium' : ''}>
+                        Donations: {district.donation_count}
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
