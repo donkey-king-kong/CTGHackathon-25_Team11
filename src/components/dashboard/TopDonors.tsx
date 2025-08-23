@@ -246,8 +246,15 @@ export function TopDonors() {
                   }
                   
                   return (
-                                         <Card key={district.district_name} className={`${cardStyle} border hover:shadow-md transition-all duration-200`}>
+                     <Card key={district.district_name} className={`${cardStyle} border hover:shadow-md transition-all duration-200 relative overflow-hidden`}>
                        <CardContent className="p-5">
+                         {/* Special Background Pattern for Bottom 3 */}
+                         {isBottomPerformer && (
+                           <div className="absolute inset-0 opacity-5">
+                             <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-red-500"></div>
+                           </div>
+                         )}
+                         
                          <div className="flex items-center justify-between mb-4">
                            <div className="flex items-center gap-4">
                              {/* Rank with Icon */}
@@ -280,32 +287,70 @@ export function TopDonors() {
                              </span>
                            )}
                          </div>
-                        
-                                                 {/* District Stats */}
-                         <div className="grid grid-cols-3 gap-2 text-sm">
-                           <div className="text-center p-2 bg-white/50 rounded-lg">
-                             <div className="flex items-center justify-center gap-1 mb-1">
+                         
+                         {/* Achievement/Status for Top 3 - Moved to top */}
+                         {index <= 2 && (
+                           <div className="mb-4 p-3 bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 rounded-lg">
+                             <div className="text-center">
+                               <div className="flex items-center justify-center gap-2 mb-2">
+                                 {index === 0 && <Crown className="h-6 w-6 text-yellow-600" />}
+                                 {index === 1 && <Medal className="h-6 w-6 text-gray-600" />}
+                                 {index === 2 && <Trophy className="h-6 w-6 text-amber-600" />}
+                               </div>
+                               <p className="text-lg font-medium text-green-800">
+                                 {index === 0 ? 'Changing lives!' : index === 1 ? 'Making a difference!' : 'Helping children!'}
+                               </p>
+                               <p className="text-sm text-green-600 mt-1">
+                                 {index === 0 ? 'Every child deserves this support' : 
+                                  index === 1 ? `${district.lives_impacted} children thriving` :
+                                  `${district.lives_impacted} children growing`}
+                               </p>
+                             </div>
+                           </div>
+                         )}
+                         
+                         {/* Special Attention for Bottom 3 - Moved to top */}
+                         {isBottomPerformer && (
+                           <div className="mb-4 p-3 bg-gradient-to-r from-orange-100 to-red-100 border border-orange-200 rounded-lg">
+                             <div className="text-center">
+                               <div className="flex items-center justify-center gap-2 mb-2">
+                                 <AlertCircle className="h-6 w-6 text-orange-600" />
+                               </div>
+                               <p className="text-lg font-medium text-orange-800">
+                                 More children could be helped here!
+                               </p>
+                               <p className="text-sm text-orange-600 mt-1">
+                                 Every donation helps more children in need
+                               </p>
+                             </div>
+                           </div>
+                         )}
+                         
+                         {/* District Stats with Comparison */}
+                         <div className="grid grid-cols-3 gap-3 text-sm">
+                           <div className="text-center p-3 bg-white/60 rounded-lg border border-gray-100">
+                             <div className="flex items-center justify-center gap-1 mb-2">
                                <Users className="h-4 w-4 text-blue-500" />
                                <span className="font-medium text-gray-600 text-xs">Donors</span>
                              </div>
-                             <span className="text-lg font-bold text-blue-600">{district.donation_count}</span>
+                             <span className="text-xl font-bold text-blue-600">{district.donation_count}</span>
                            </div>
                            
-                           <div className="text-center p-2 bg-white/50 rounded-lg">
-                             <div className="flex items-center justify-center gap-1 mb-1">
+                           <div className="text-center p-3 bg-white/60 rounded-lg border border-gray-100">
+                             <div className="flex items-center justify-center gap-1 mb-2">
                                <Users className="h-4 w-4 text-purple-500" />
                                <span className="font-medium text-gray-600 text-xs">Lives</span>
                              </div>
-                             <span className="text-lg font-bold text-purple-600">{district.lives_impacted}</span>
+                             <span className="text-xl font-bold text-purple-600">{district.lives_impacted}</span>
                            </div>
                            
-                           <div className="text-center p-2 bg-white/50 rounded-lg">
-                             <div className="flex items-center justify-center gap-1 mb-1">
+                           <div className="text-center p-3 bg-white/60 rounded-lg border border-gray-100">
+                             <div className="flex items-center justify-center gap-1 mb-2">
                                <DollarSign className="h-4 w-4 text-green-500" />
                                <span className="font-medium text-gray-600 text-xs">Total</span>
                              </div>
-                             <span className="text-lg font-bold text-green-600">${district.total_amount.toLocaleString()}</span>
-                             {/* Percentage of Leader for Context */}
+                             <span className="text-xl font-bold text-green-600">${district.total_amount.toLocaleString()}</span>
+                             {/* Percentage of Leader for Total Amount */}
                              {index > 0 && (
                                <div className="text-xs text-gray-500 mt-1">
                                  {((district.total_amount / districts[0]?.total_amount) * 100).toFixed(1)}% of leader
@@ -314,14 +359,8 @@ export function TopDonors() {
                            </div>
                          </div>
                          
-                         {/* Special Message for Bottom Performers */}
-                         {isBottomPerformer && (
-                           <div className="mt-3 p-2 bg-orange-100 rounded text-xs text-orange-700">
-                             💡 This district could benefit from more donor outreach
-                           </div>
-                         )}
-                      </CardContent>
-                    </Card>
+                       </CardContent>
+                     </Card>
                   );
                 })}
               </div>
