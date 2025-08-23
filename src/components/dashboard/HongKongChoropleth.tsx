@@ -32,31 +32,29 @@ export function HongKongChoropleth() {
   // Colour allocation based on donations distribution
   const getDynamicChoroplethStyle = (totalDonations: number, allDonations: number[]) => {
     if (totalDonations === 0) {
-      return { color: '#e5e7eb', opacity: 0.6 };
+      return { color: '#dc2626', opacity: 0.8 }; // Red for districts with 0 donations
     }
     
-    // Calculate percentiles from actual data
-    const sortedDonations = [...allDonations].sort((a, b) => a - b);
-    const max = Math.max(...allDonations);
-    const min = Math.min(...allDonations.filter(d => d > 0)); // Exclude 0
+    // Get all districts with donations > 0
+    const districtsWithDonations = allDonations.filter(d => d > 0);
     
-    // Create dynamic thresholds based on data distribution
-    const percentile80 = sortedDonations[Math.floor(sortedDonations.length * 0.8)];
-    const percentile60 = sortedDonations[Math.floor(sortedDonations.length * 0.6)];
-    const percentile40 = sortedDonations[Math.floor(sortedDonations.length * 0.4)];
-    const percentile20 = sortedDonations[Math.floor(sortedDonations.length * 0.2)];
-    
-    // Dynamic color assignment
-    if (totalDonations >= percentile80) {
-      return { color: '#059669', opacity: 0.9 }; // Top 20% - Dark Green
-    } else if (totalDonations >= percentile60) {
-      return { color: '#10b981', opacity: 0.8 }; // Top 40% - Medium Green
-    } else if (totalDonations >= percentile40) {
-      return { color: '#f59e0b', opacity: 0.7 }; // Top 60% - Amber
-    } else if (totalDonations >= percentile20) {
-      return { color: '#ea580c', opacity: 0.6 }; // Top 80% - Dark Orange
+    // If all districts have donations, sort and color bottom 5 as red
+    if (districtsWithDonations.length === allDonations.length) {
+      const sortedDonations = [...districtsWithDonations].sort((a, b) => a - b);
+      const bottom5Threshold = sortedDonations[Math.min(4, sortedDonations.length - 1)]; // 5th lowest or last if < 5
+      
+      if (totalDonations <= bottom5Threshold) {
+        return { color: '#dc2626', opacity: 0.8 }; // Red for bottom 5 districts
+      } else {
+        return { color: '#059669', opacity: 0.9 }; // Green for top districts
+      }
     } else {
-      return { color: '#dc2626', opacity: 0.5 }; // Bottom 20% - Red
+      // Some districts have 0 donations - color non-zero donations as green
+      if (totalDonations > 0) {
+        return { color: '#059669', opacity: 0.9 }; // Green for districts with donations
+      } else {
+        return { color: '#dc2626', opacity: 0.8 }; // Red for districts with 0 donations
+      }
     }
   };
 
@@ -64,27 +62,29 @@ export function HongKongChoropleth() {
   const generateDynamicLegend = (districts: DistrictDonationData[]) => {
     if (districts.length === 0) return [];
     
-    const donationsWithAmounts = districts.filter(d => d.total_donations > 0);
-    if (donationsWithAmounts.length === 0) {
-      return [{ color: '#e5e7eb', label: 'Base (No donations)', threshold: 0 }];
+    const districtsWithDonations = districts.filter(d => d.total_donations > 0);
+    const districtsWithoutDonations = districts.filter(d => d.total_donations === 0);
+    
+    if (districtsWithDonations.length === 0) {
+      return [{ color: '#dc2626', label: 'No Donations', threshold: 0 }];
     }
     
-    const allDonations = donationsWithAmounts.map(d => d.total_donations);
-    const sortedDonations = [...allDonations].sort((a, b) => a - b);
-    
-    const percentile80 = sortedDonations[Math.floor(sortedDonations.length * 0.8)];
-    const percentile60 = sortedDonations[Math.floor(sortedDonations.length * 0.6)];
-    const percentile40 = sortedDonations[Math.floor(sortedDonations.length * 0.4)];
-    const percentile20 = sortedDonations[Math.floor(sortedDonations.length * 0.2)];
-    
-    return [
-      { color: '#059669', label: `High (Top 20% - $${percentile80.toLocaleString()}+)`, threshold: percentile80 },
-      { color: '#10b981', label: `Medium-High (Top 40% - $${percentile60.toLocaleString()}+)`, threshold: percentile60 },
-      { color: '#f59e0b', label: `Medium (Top 60% - $${percentile40.toLocaleString()}+)`, threshold: percentile40 },
-      { color: '#ea580c', label: `Low-Medium (Top 80% - $${percentile20.toLocaleString()}+)`, threshold: percentile20 },
-      { color: '#dc2626', label: `Low (Bottom 20% - $${Math.min(...allDonations).toLocaleString()}+)`, threshold: Math.min(...allDonations) },
-      { color: '#e5e7eb', label: 'Base (No donations)', threshold: 0 }
-    ];
+    // If all districts have donations, show bottom 5 vs top
+    if (districtsWithoutDonations.length === 0) {
+      const sortedDonations = districtsWithDonations.map(d => d.total_donations).sort((a, b) => a - b);
+      const bottom5Threshold = sortedDonations[Math.min(4, sortedDonations.length - 1)];
+      
+      return [
+        { color: '#059669', label: `Top Districts ($${bottom5Threshold.toLocaleString()}+)`, threshold: bottom5Threshold },
+        { color: '#dc2626', label: `Bottom 5 Districts (< $${bottom5Threshold.toLocaleString()})`, threshold: bottom5Threshold }
+      ];
+    } else {
+      // Some districts have 0 donations
+      return [
+        { color: '#059669', label: 'Has Donations', threshold: 0 },
+        { color: '#dc2626', label: 'No Donations', threshold: 0 }
+      ];
+    }
   };
 
   // Create district data with real donations from Supabase database
@@ -295,7 +295,7 @@ export function HongKongChoropleth() {
     return districtData.find(d => d.district_code === districtCode);
   };
 
-  // Custom style function that applies district-level colors
+  // Applies district-level colors
   const getFeatureStyle = (feature: Feature<Geometry, Record<string, unknown>>) => {
     // Check what properties are available - convert DCCA2011_I to string
     const districtCode = String(feature.properties.DCCA2011_I || 
@@ -305,30 +305,31 @@ export function HongKongChoropleth() {
                          feature.properties.id ||
                          'UNKNOWN');
     
-    // Find the specific district data
+    // Find the specific district
     const districtInfo = districtData.find(d => d.district_code === districtCode);
     
-    // Base style for all regions (grey)
-    const baseStyle = {
+    // Apply the dynamic coloring
+    if (districtInfo) {
+      const allDonations = districtData.map(d => d.total_donations);
+      const { color, opacity } = getDynamicChoroplethStyle(districtInfo.total_donations, allDonations);
+      
+      return {
+        fillColor: color,
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        fillOpacity: opacity
+      };
+    }
+    
+    // Fallback for unknown districts
+    return {
       fillColor: '#e5e7eb', // Light grey
       weight: 1,
       opacity: 1,
       color: '#9ca3af', // Medium grey border
       fillOpacity: 0.6
     };
-    
-    // Only apply donation-based colors if this specific district has donations
-    if (districtInfo && districtInfo.total_donations > 0) {
-      return {
-        fillColor: districtInfo.color,
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        fillOpacity: districtInfo.opacity
-      };
-    }
-    
-    return baseStyle;
   };
 
     // Event handlers for each feature
@@ -347,6 +348,11 @@ export function HongKongChoropleth() {
     // Apply styling using the custom style function
     const style = getFeatureStyle(feature);
     (layer as any).setStyle(style);
+    
+    // Force a style update to ensure colors are applied
+    setTimeout(() => {
+      (layer as any).setStyle(style);
+    }, 100);
     
     // Bind tooltip with district-specific information
     (layer as any).bindTooltip(`
@@ -477,7 +483,7 @@ export function HongKongChoropleth() {
 
       {/* Dynamic Legend */}
       <div className="mt-4 p-4 bg-white rounded-lg shadow-sm border">
-        <h4 className="text-sm font-semibold text-gray-700 mb-3">Dynamic Donation Intensity by District</h4>
+        <h4 className="text-sm font-semibold text-gray-700 mb-3">Donation Status by District</h4>
         <div className="space-y-2">
           {dynamicLegend.map((item, index) => (
             <div key={index} className="flex items-center space-x-3">
@@ -491,7 +497,7 @@ export function HongKongChoropleth() {
         </div>
         <div className="mt-3 pt-3 border-t border-gray-200">
           <p className="text-xs text-gray-500">
-            Colors automatically adjust based on current donation distribution. 
+            Red: Districts with no donations or bottom 5 performers. Green: Districts with donations or top performers.
             Auto-refreshes every 5 minutes.
           </p>
         </div>
