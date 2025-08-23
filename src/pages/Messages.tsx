@@ -41,7 +41,10 @@ interface Message {
   animation_type: string;
   donors: string[];
   type: string;
+  school: string;
 }
+
+type Profile = { full_name: string | null };
 
 export default function Messages() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -53,6 +56,7 @@ export default function Messages() {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<any>(null);
   const [currentTab, setCurrentTab] = useState<"public" | "personal">("public");
 
@@ -82,6 +86,32 @@ export default function Messages() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
+    async function loadProfile() {
+      if (!user?.id) { setProfile(null); return; }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .single();
+
+      if (!cancelled) {
+        if (error) {
+          console.warn("profiles fetch error:", error.message);
+          setProfile(null);
+        } else {
+          setProfile(data);
+        }
+      }
+    }
+
+    loadProfile();
+    return () => { cancelled = true; };
+  }, [user?.id]);
+
+  useEffect(() => {
     filterMessages();
   }, [messages, searchQuery, regionFilter, languageFilter, currentTab, 
     user
@@ -99,14 +129,18 @@ export default function Messages() {
       if (error) throw error;
       // console.log(data)
       setMessages(
-        (data || []).map((msg) => ({
-          ...msg,
+        (data || []).map((msg: any) => ({
+          ...msg, // keep other cols you might use later
           media_urls: Array.isArray(msg.media_urls)
-            ? msg.media_urls.map((url) => String(url))
+            ? msg.media_urls.map((url: unknown) => String(url))
             : [],
           media_types: Array.isArray(msg.media_types)
-            ? msg.media_types.map((type) => String(type))
+            ? msg.media_types.map((t: unknown) => String(t))
             : [],
+          donors: Array.isArray(msg.donors)
+            ? msg.donors.map((d: unknown) => String(d))
+            : [],                     // <- ensure always an array
+          type: typeof msg.type === 'string' ? msg.type : 'public', // <- ensure always a string
         }))
       );
       // console.log(messages)
@@ -161,25 +195,6 @@ export default function Messages() {
   const closeMessage = () => {
     setSelectedMessage(null);
     setIsLightboxOpen(false);
-  };
-
-  const handleShareMessage = async (message: Message) => {
-    try {
-      await navigator.share({
-        title: `Thank you letter from ${message.child_alias}`,
-        text: `"${message.text.substring(
-          0,
-          100
-        )}..." - A heartfelt message from a child`,
-        url: window.location.href,
-      });
-    } catch (error) {
-      // Fallback to clipboard
-      await navigator.clipboard.writeText(
-        `Check out this heartfelt thank you letter: "${message.text}" - From ${message.child_alias} at ${window.location.href}`
-      );
-      toast.success("Message link copied to clipboard!");
-    }
   };
 
   const handleSignIn = () => {
@@ -345,7 +360,7 @@ export default function Messages() {
                       message={message}
                       onOpen={openMessage}
                       index={index}
-                      donorName={user?.full_name.split(" ")[0] || "You"}
+                      donorName={(profile?.full_name ?? "You")}
                     />
                   ) : (
                     <MessageCard
@@ -405,9 +420,8 @@ export default function Messages() {
         message={selectedMessage}
         isOpen={isLightboxOpen}
         onClose={closeMessage}
-        donorName={user?.full_name.split(" ")[0] || "You"}
+        donorName={(profile?.full_name ?? "You")}
       />
-
     </div>
     </>
 

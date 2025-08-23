@@ -16,6 +16,8 @@ interface Message {
   donors: string[];
   created_at: string;
   animation_type: string;
+  type: string;
+  school: string;
 }
 
 interface MessageLightboxProps {
@@ -66,11 +68,6 @@ export function MessageLightbox({
       toast.error("Failed to share message");
     }
   };
-
-  // const handleInstagramShare = () => {
-  //   // This is now handled by the InstagramPostGenerator component
-  //   toast.success("Use the Instagram button below to create a beautiful post!");
-  // };
 
   const getDeliveryAnimation = () => {
     switch (message.animation_type) {
@@ -282,13 +279,12 @@ export function MessageLightbox({
                     : "Mixed"}
                 </Badge>
 
-                {/* HELP: DONOR NAME SHOULD ONLY APPEAR FOR MESSAGES IN FOR YOU PAGE */}
-                {/* {message.donors && (
+                {(message.donors?.length > 0) && (
                   <Badge className="bg-red-100 text-red-700 border border-red-200">
                     <Heart className="h-3 w-3 mr-1" />
                     Special message for: {donorName}
                   </Badge>
-                )} */}
+                )}
 
                 <Badge
                   variant="outline"
