@@ -96,7 +96,7 @@ export default function Messages() {
       const { data, error } = await query;
 
       if (error) throw error;
-
+      // console.log(data)
       setMessages(
         (data || []).map((msg) => ({
           ...msg,
@@ -108,6 +108,7 @@ export default function Messages() {
             : [],
         }))
       );
+      // console.log(messages)
     } catch (error) {
       console.error("Error fetching messages:", error);
       toast.error("Failed to load messages");
@@ -123,11 +124,11 @@ export default function Messages() {
     if (currentTab === "personal") {
       // Fetch messsages tagged to this specific user and general messages
       filtered = filtered.filter(
-        (message) => user && (message.donors.includes(user.id) || message.donors == null)
+        (message) => user && (message.donors.includes(user.id) || message.donors.length == 0)
       );
     } else {
       // Show only general messages
-      filtered = filtered.filter((message) => message.donors == null);
+      filtered = filtered.filter((message) => message.donors.length == 0);
     }
 
     if (searchQuery) {
