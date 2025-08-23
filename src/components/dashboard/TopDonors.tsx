@@ -135,21 +135,21 @@ export function TopDonors() {
     }
   };
 
-  return (
-    <Card className="bg-white border-0 shadow-lg overflow-hidden">
-      <CardHeader className="pb-6 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
-        <CardTitle className="flex items-center gap-3 text-2xl font-bold">
-          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-            <Award className="h-6 w-6" />
-          </div>
-          District Leaderboard
-        </CardTitle>
-        <CardDescription className="text-emerald-100 text-lg">
-          Hong Kong districts ranked by total donations amount
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="p-6">
+      return (
+      <Card className="bg-white border-0 shadow-lg overflow-hidden">
+        <CardHeader className="pb-6 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+          <CardTitle className="flex items-center gap-3 text-2xl font-bold">
+            <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+              <Award className="h-6 w-6" />
+            </div>
+            District Leaderboard
+          </CardTitle>
+          <CardDescription className="text-emerald-100 text-lg">
+            Hong Kong districts ranked by total donations amount
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent className="p-6">
         {districts.length === 0 ? (
           <div className="text-center py-12">
             <Award className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -158,59 +158,120 @@ export function TopDonors() {
           </div>
         ) : (
           <div className="space-y-6">
-            {/* Districts Needing Support Section - Replacing Podium */}
+            {/* Districts Needing Support Section - Enhanced Design */}
             {districts.length >= 3 && (
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-orange-700 mb-4 text-center flex items-center justify-center gap-2">
-                  <AlertCircle className="h-5 w-5" />
-                  Districts Needing Support
-                </h3>
-                <div className="flex items-end justify-center gap-4">
-                  {/* 3rd from Bottom */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-20 h-24 bg-gradient-to-b from-orange-300 to-orange-400 border-2 border-orange-200 rounded-t-lg flex items-center justify-center">
+              <div className="mb-10">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center gap-3 p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl border border-orange-200 shadow-lg">
+                    <div className="p-3 bg-gradient-to-r from-orange-400 to-red-500 rounded-xl">
                       <AlertCircle className="h-6 w-6 text-white" />
                     </div>
-                    <div className="text-center mt-2">
-                      <p className="font-bold text-orange-700">#{districts.length - 2}</p>
-                      <p className="text-sm text-gray-600 font-medium">{districts[districts.length - 3]?.district_name}</p>
-                      <p className="text-lg font-bold text-orange-800">${districts[districts.length - 3]?.total_amount.toLocaleString()}</p>
-                      <p className="text-xs text-orange-600">Needs donors</p>
-                    </div>
-                  </div>
-                  
-                  {/* 2nd from Bottom */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-24 h-28 bg-gradient-to-b from-red-400 to-red-500 border-2 border-red-300 rounded-t-lg flex items-center justify-center">
-                      <AlertCircle className="h-8 w-8 text-white" />
-                    </div>
-                    <div className="text-center mt-2">
-                      <p className="font-bold text-red-700">#{districts.length - 1}</p>
-                      <p className="text-sm text-gray-600 font-medium">{districts[districts.length - 2]?.district_name}</p>
-                      <p className="text-lg font-bold text-red-800">${districts[districts.length - 2]?.total_amount.toLocaleString()}</p>
-                      <p className="text-xs text-red-600">Urgent need</p>
-                    </div>
-                  </div>
-                  
-                  {/* Bottom District */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-28 h-32 bg-gradient-to-b from-red-600 to-red-700 border-2 border-red-500 rounded-t-lg flex items-center justify-center">
-                      <AlertCircle className="h-10 w-10 text-white" />
-                    </div>
-                    <div className="text-center mt-2">
-                      <p className="font-bold text-red-800">#{districts.length}</p>
-                      <p className="text-sm text-gray-600 font-medium">{districts[districts.length - 1]?.district_name}</p>
-                      <p className="text-xl font-bold text-red-900">${districts[districts.length - 1]?.total_amount.toLocaleString()}</p>
-                      <p className="text-xs text-red-700">Critical support needed</p>
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-800">Districts Needing Support</h3>
+                      <p className="text-gray-600">Help these areas reach more children</p>
                     </div>
                   </div>
                 </div>
                 
-                {/* Call to Action */}
-                <div className="mt-4 text-center">
-                  <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-4 py-2 rounded-lg">
-                    <AlertCircle className="h-4 w-4" />
-                    <span className="text-sm font-medium">These districts need your help to reach more children!</span>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* 3rd from Bottom */}
+                  <div className="group relative overflow-hidden rounded-2xl border-0 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 opacity-90"></div>
+                    <div className="relative p-6 text-white">
+                      <div className="text-center mb-4">
+                        <div className="flex items-center justify-center gap-3 mb-3">
+                          <div className="p-2 bg-white/20 rounded-full backdrop-blur-sm">
+                            <AlertCircle className="h-5 w-5" />
+                          </div>
+                          <span className="text-lg font-bold">#{districts.length - 2}</span>
+                        </div>
+                        <div className="px-3 py-1 bg-white/20 rounded-full backdrop-blur-sm inline-block">
+                          <span className="text-sm font-medium">Needs Support</span>
+                        </div>
+                      </div>
+                      
+                      <h4 className="text-2xl font-bold mb-3 text-center">{districts[districts.length - 3]?.district_name}</h4>
+                      <div className="text-center mb-4">
+                        <div className="text-3xl font-bold mb-2">${(districts[districts.length - 3]?.total_amount / 100).toLocaleString()}</div>
+                        <p className="text-sm text-white/80">Total donations received</p>
+                      </div>
+                      
+                      <div className="text-center p-4 bg-white/20 rounded-xl backdrop-blur-sm">
+                        <p className="text-xl font-bold mb-2">More children could be helped here!</p>
+                        <p className="text-white/90">Every donation helps more children in need</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 2nd from Bottom */}
+                  <div className="group relative overflow-hidden rounded-2xl border-0 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-400 via-red-500 to-red-600 opacity-90"></div>
+                    <div className="relative p-6 text-white">
+                      <div className="text-center mb-4">
+                        <div className="flex items-center justify-center gap-3 mb-3">
+                          <div className="p-2 bg-white/20 rounded-full backdrop-blur-sm">
+                            <AlertCircle className="h-5 w-5" />
+                          </div>
+                          <span className="text-lg font-bold">#{districts.length - 1}</span>
+                        </div>
+                        <div className="px-3 py-1 bg-white/20 rounded-full backdrop-blur-sm inline-block">
+                          <span className="text-sm font-medium">Urgent Need</span>
+                        </div>
+                      </div>
+                      
+                      <h4 className="text-2xl font-bold mb-3 text-center">{districts[districts.length - 2]?.district_name}</h4>
+                      <div className="text-center mb-4">
+                        <div className="text-3xl font-bold mb-2">${(districts[districts.length - 2]?.total_amount / 100).toLocaleString()}</div>
+                        <p className="text-sm text-white/80">Total donations received</p>
+                      </div>
+                      
+                      <div className="text-center p-4 bg-white/20 rounded-xl backdrop-blur-sm">
+                        <p className="text-xl font-bold mb-2">More children could be helped here!</p>
+                        <p className="text-white/90">Every donation helps more children in need</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Bottom District */}
+                  <div className="group relative overflow-hidden rounded-2xl border-0 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-600 via-red-700 to-red-800 opacity-90"></div>
+                    <div className="relative p-6 text-white">
+                      <div className="text-center mb-4">
+                        <div className="flex items-center justify-center gap-3 mb-3">
+                          <div className="p-2 bg-white/20 rounded-full backdrop-blur-sm">
+                            <AlertCircle className="h-5 w-5" />
+                          </div>
+                          <span className="text-lg font-bold">#{districts.length}</span>
+                        </div>
+                        <div className="px-3 py-1 bg-white/20 rounded-full backdrop-blur-sm inline-block">
+                          <span className="text-sm font-medium">Critical Need</span>
+                        </div>
+                      </div>
+                      
+                      <h4 className="text-2xl font-bold mb-3 text-center">{districts[districts.length - 1]?.district_name}</h4>
+                      <div className="text-center mb-4">
+                        <div className="text-3xl font-bold mb-2">${(districts[districts.length - 1]?.total_amount / 100).toLocaleString()}</div>
+                        <p className="text-sm text-white/80">Total donations received</p>
+                      </div>
+                      
+                      <div className="text-center p-4 bg-white/20 rounded-xl backdrop-blur-sm">
+                        <p className="text-xl font-bold mb-2">More children could be helped here!</p>
+                        <p className="text-white/90">Every donation helps more children in need</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Enhanced Call to Action */}
+                <div className="mt-8 text-center">
+                  <div className="inline-flex items-center gap-4 p-6 bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl border border-orange-200 shadow-lg">
+                    <div className="p-3 bg-gradient-to-r from-orange-400 to-red-500 rounded-xl">
+                      <AlertCircle className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold text-orange-800">These districts need your help to reach more children!</p>
+                      <p className="text-orange-600 mt-1">Consider supporting these areas to maximize your impact</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -346,7 +407,7 @@ export function TopDonors() {
                            
                            <div className="text-center p-3 bg-white/60 rounded-lg border border-gray-100">
                              <div className="flex items-center justify-center gap-1 mb-2">
-                               <DollarSign className="h-4 w-4 text-green-500" />
+                               <DollarSign className="h-5 w-5 text-green-500" />
                                <span className="font-medium text-gray-600 text-xs">Total</span>
                              </div>
                              <span className="text-xl font-bold text-green-600">${district.total_amount.toLocaleString()}</span>
