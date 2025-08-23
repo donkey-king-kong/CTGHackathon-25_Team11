@@ -168,12 +168,12 @@ export function HongKongChoropleth() {
         return {
           district_code: districtCode,
           district_name: getDistrictName(districtCode),
-          total_donations: data.total_amount / 100, // Convert cents to dollars
+          total_donations: data.total_amount,
           donation_count: data.donation_count,
           unique_donors: uniqueDonorsCount,
-          average_donation: data.donation_count > 0 ? (data.total_amount / 100) / data.donation_count : 0,
+          average_donation: data.donation_count > 0 ? (data.total_amount) / data.donation_count : 0,
           lives_impacted: data.lives_impacted,
-          color: '#e5e7eb', // Will be set by dynamic coloring
+          color: '#e5e7eb',
           opacity: 0.6
         };
       });
