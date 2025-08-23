@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TopDonors } from "@/components/dashboard/TopDonors";
 import { MonthlyRankings } from "@/components/dashboard/MonthlyRankings";
 import { RecentDonations } from "@/components/dashboard/RecentDonations";
-import { HongKongHeatmap } from "@/components/dashboard/HongKongHeatmap";
+import { HongKongChoropleth } from "@/components/dashboard/HongKongChoropleth";
 
 export default function Leaderboard() {
   return (
@@ -47,7 +47,7 @@ export default function Leaderboard() {
             </TabsContent>
 
             <TabsContent value="regional" className="space-y-6">
-              <HongKongHeatmap />
+              <HongKongChoropleth />
             </TabsContent>
           </Tabs>
         </div>
