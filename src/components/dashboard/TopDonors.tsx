@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, Crown, Medal } from "lucide-react";
+import { Trophy, Crown, Medal, MapPin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-interface Donor {
-  donor_name: string;
+interface District {
+  district_name: string;
   total_amount: number;
   lives_impacted: number;
   donation_count: number;
@@ -13,17 +13,23 @@ interface Donor {
 export function TopDonors() {
   console.log('TopDonors component is running!');
   
-  const [donors, setDonors] = useState<Donor[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log('useEffect is running!');
-    const fetchTopDonors = async () => {
-      console.log('fetchTopDonors function started!');
+    const fetchTopDistricts = async () => {
+      console.log('fetchTopDistricts function started!');
       try {
+        // Join donations with regions to get district information
         const { data, error } = await supabase
           .from('donations')
-          .select('donor_name, amount, lives_impacted')
+          .select(`
+            amount,
+            lives_impacted,
+            region_id,
+            regions!inner(name)
+          `)
           .order('amount', { ascending: false });
 
         console.log('Supabase response:', { data, error });
@@ -31,18 +37,21 @@ export function TopDonors() {
 
         if (error) throw error;
 
-        // Aggregate donations by donor
-        const donorMap = new Map<string, Donor>();
+        // Aggregate donations by district
+        const districtMap = new Map<string, District>();
         
         data?.forEach((donation) => {
-          const existing = donorMap.get(donation.donor_name);
+          const regionName = donation.regions?.name;
+          if (!regionName) return;
+          
+          const existing = districtMap.get(regionName);
           if (existing) {
             existing.total_amount += Number(donation.amount);
             existing.lives_impacted += donation.lives_impacted;
             existing.donation_count += 1;
           } else {
-            donorMap.set(donation.donor_name, {
-              donor_name: donation.donor_name,
+            districtMap.set(regionName, {
+              district_name: regionName,
               total_amount: Number(donation.amount),
               lives_impacted: donation.lives_impacted,
               donation_count: 1,
@@ -50,26 +59,25 @@ export function TopDonors() {
           }
         });
 
-        const sortedDonors = Array.from(donorMap.values())
-          .sort((a, b) => b.lives_impacted - a.lives_impacted)
-          .slice(0, 10);
+        const sortedDistricts = Array.from(districtMap.values())
+          .sort((a, b) => b.total_amount - a.total_amount);
 
-        setDonors(sortedDonors);
+        setDistricts(sortedDistricts);
       } catch (error) {
-        console.error('Error fetching top donors:', error);
+        console.error('Error fetching top districts:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTopDonors();
+    fetchTopDistricts();
   }, []);
 
   if (loading) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Top Donors by Lives Impacted</CardTitle>
+          <CardTitle>Top Districts by Donations</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-4">
@@ -95,38 +103,38 @@ export function TopDonors() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Trophy className="h-5 w-5" />
-          Top Donors by Lives Impacted
+          <MapPin className="h-5 w-5" />
+          Top Districts by Donations
         </CardTitle>
         <CardDescription>
-          Our most impactful donors, ranked by the number of children's lives they've touched
+          Hong Kong districts ranked by total donations received
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {donors.length === 0 ? (
-          <p className="text-muted-foreground text-center py-8">No donor data available yet.</p>
+        {districts.length === 0 ? (
+          <p className="text-muted-foreground text-center py-8">No district data available yet.</p>
         ) : (
           <div className="space-y-4">
-            {donors.map((donor, index) => (
+            {districts.map((district, index) => (
               <div 
-                key={donor.donor_name} 
+                key={district.district_name} 
                 className="flex items-center justify-between p-4 rounded-lg border bg-gradient-to-r from-muted/30 to-transparent"
               >
                 <div className="flex items-center gap-3">
                   {getRankIcon(index)}
                   <div>
-                    <p className="font-medium">{donor.donor_name}</p>
+                    <p className="font-medium">{district.district_name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {donor.donation_count} donation{donor.donation_count > 1 ? 's' : ''}
+                      {district.donation_count} donation{district.donation_count > 1 ? 's' : ''}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-primary">
-                    {donor.lives_impacted} lives
+                    ${(district.total_amount / 100).toLocaleString()}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    ${donor.total_amount.toLocaleString()}
+                    {district.lives_impacted} lives impacted
                   </p>
                 </div>
               </div>
