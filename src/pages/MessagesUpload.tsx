@@ -188,15 +188,15 @@ export default function MessagesUpload() {
       const { error } = await supabase.from("messages").insert([
         {
           child_alias: formData.child_alias,
-          // region: formData.region || null,
           language: formData.language,
+          // region: formData.region,
           text: formData.text,
           media_urls: mediaData.urls,
           media_types: mediaData.types,
           donors: formData.donors || null,
           animation_type: formData.animation_type,
           consent: formData.consent,
-          status: "pending",
+          type: formData.privacy,
         },
       ]);
 
