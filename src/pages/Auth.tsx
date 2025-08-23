@@ -73,7 +73,7 @@ export default function Auth() {
       setContext('messages');
     } else if (referrer.includes('/admin')) {
       setContext('admin');
-    } else if (referrer.includes('/kids-upload')) {
+    } else if (referrer.includes('/messages-upload')) {
       setContext('recipient');
     }
   }, []);

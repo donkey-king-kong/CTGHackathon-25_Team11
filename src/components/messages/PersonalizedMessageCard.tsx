@@ -15,6 +15,7 @@ interface Message {
   donors: string[];
   created_at: string;
   animation_type: string;
+  type: string;
 }
 
 interface PersonalizedMessageCardProps {
