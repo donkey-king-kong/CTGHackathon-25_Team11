@@ -11,9 +11,8 @@ import Admin from "./pages/Admin";
 import Festival from "./pages/Festival";
 import WhatWeDo from "./pages/WhatWeDo";
 import Messages from "./pages/Messages";
-import MessagesNew from "./pages/MessagesNew";
 import MessagesModerate from "./pages/MessagesModerate";
-import KidsUpload from "./pages/KidsUpload";
+import MessagesUpload from "./pages/MessagesUpload";
 import Auth from "./pages/Auth";
 import ReachHome from "./pages/ReachHome";
 import ReachAbout from "./pages/ReachAbout";
@@ -46,9 +45,8 @@ const App = () => (
             
             {/* Messages Feature */}
             <Route path="/messages" element={<Messages />} />
-            <Route path="/messages/new" element={<MessagesNew />} />
+            <Route path="/messages/new" element={<MessagesUpload />} />
             <Route path="/messages/moderate" element={<MessagesModerate />} />
-            <Route path="/kids-upload" element={<KidsUpload />} />
             
             {/* Authentication */}
             <Route path="/auth" element={<Auth />} />
