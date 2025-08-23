@@ -84,19 +84,11 @@ export default function WhatWeDo() {
   const curriculumImages = [
     {
       src: "/assets/curriculum-1.jpg",
-      alt: "Storybook-based learning"
+      alt: "Worksheet"
     },
     {
       src: "/assets/curriculum-2.jpg", 
-      alt: "English proficiency activities"
-    },
-    {
-      src: "/assets/curriculum-3.jpg",
-      alt: "K3 classroom sessions"
-    },
-    {
-      src: "/assets/curriculum-4.jpg",
-      alt: "Interactive learning materials"
+      alt: "Reading"
     }
   ];
 
@@ -513,7 +505,7 @@ export default function WhatWeDo() {
           <h2 className="text-3xl font-bold text-center mb-12 text-reach-green">Our Project Interventions</h2>
           <div className="max-w-6xl mx-auto">
             <p className="text-xl text-center text-gray-600 mb-12">
-              Project REACH aims to tackle Hong Kong's inequality gap at its core through 3 interventions:
+              Three targeted interventions to bridge Hong Kong's inequality gap:
             </p>
             
             <div className="space-y-8">
@@ -527,10 +519,9 @@ export default function WhatWeDo() {
                     <div>
                       <h3 className="text-2xl font-bold text-reach-green mb-4">EMPOWERING STUDENTS</h3>
                       <p className="text-lg text-gray-700 leading-relaxed">
-                        We provide a minimum of <strong>20 hours of weekly, premium English programmes</strong> targeting 
-                        to bridge the English proficiency gaps of K3 kindergarten students coming from some 
-                        of the poorest districts in Hong Kong. Our curriculum is designed based on renowned 
-                        storybooks worldwide.
+                        <strong>20+ hours weekly</strong> of premium English programmes for K3 students 
+                        from Hong Kong's poorest districts. Our storybook-based curriculum bridges 
+                        critical English proficiency gaps.
                       </p>
                     </div>
                   </div>
@@ -547,14 +538,13 @@ export default function WhatWeDo() {
                     <div>
                       <h3 className="text-2xl font-bold text-reach-orange mb-4">EMPOWERING PARENTS</h3>
                       <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                        Students are given home learning booklets for them to practise at home after each 
-                        class. Detailed written instructions with videos are provided to parents each week on 
-                        how to help their children complete the home learning booklets.
+                        Home learning booklets with detailed instructions and video guides help parents 
+                        support their children's progress between classes.
                       </p>
                       <div className="bg-white/60 p-4 rounded-lg">
                         <p className="text-gray-700">
-                          Parents are requested to submit completed work to Project REACH for grading. Our 
-                          previous programmes have increased <strong>parent-children interaction by &gt;3,000 hours.</strong>
+                          Parents submit completed work for grading, increasing  
+                          <strong> parent-child interaction by 3,000+ hours.</strong>
                         </p>
                       </div>
                     </div>
@@ -570,16 +560,15 @@ export default function WhatWeDo() {
                       3
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-blue-600 mb-4">EMPOWERING KINDERGARTENS WITH DATA AND TECHNOLOGY</h3>
+                      <h3 className="text-2xl font-bold text-blue-600 mb-4">EMPOWERING KINDERGARTENS WITH DATA</h3>
                       <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                        All participating students will utilise the Project Reach learning app, a 
-                        proprietary platform created and owned by Project Reach, to complete 
-                        their pre-and post-programme assessments.
+                        Our proprietary learning app handles pre- and post-programme assessments, 
+                        providing instant student feedback.
                       </p>
                       <div className="bg-white/60 p-4 rounded-lg">
                         <p className="text-gray-700">
-                          The app will provide immediate feedback to students, and all learning data 
-                          will be collected, analysed, and shared with our kindergarten partners.
+                          Learning data is analyzed and shared with kindergarten partners to 
+                          drive continuous improvement.
                         </p>
                       </div>
                     </div>
@@ -598,27 +587,78 @@ export default function WhatWeDo() {
           transition={{ duration: 0.8, delay: 1.0 }}
         >
           <h2 className="text-3xl font-bold text-center mb-12 text-reach-green">The Impact We're Making</h2>
-          <div className="max-w-4xl mx-auto">
-            <Card className="bg-gradient-to-br from-red-50 to-orange-50 border-red-200 shadow-xl">
-              <CardContent className="p-8">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">Breaking the Vicious Cycle</h3>
-                  <p className="text-lg text-gray-700 leading-relaxed">
-                    Without proper interventions, these children would forever be fallen behind, 
-                    both academically and developmentally, as early as they enter Primary 1. 
-                    Many of them would never catch up.
-                  </p>
-                </div>
-                
-                <div className="bg-white/60 p-6 rounded-lg mb-8">
-                  <p className="text-lg text-gray-700 font-medium text-center">
-                    "It is a vicious cycle. It exponentially increases the inequality gap in Hong Kong. 
-                    These children deserve the rights to be led to that starting line so that they can 
-                    be given equal opportunities to lead a better life."
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="max-w-6xl mx-auto">
+            <p className="text-xl text-center text-gray-600 mb-12">
+              Breaking the Cycle
+            </p>
+            {/* Visual Cycle Comparison */}
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              {/* Without Intervention */}
+              <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200 shadow-lg">
+                <CardContent className="p-8">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-red-500 rounded-full flex items-center justify-center">
+                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-red-700 mb-4">Without Intervention</h3>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-400 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-700">Academic gaps widen</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-500 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-700">Fall behind by Primary 1</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-600 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-700">Many never catch up</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-red-700 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-700 font-semibold">Inequality gap grows</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* With Project REACH */}
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-100 border-green-200 shadow-lg">
+                <CardContent className="p-8">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-reach-green rounded-full flex items-center justify-center">
+                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-reach-green mb-4">With Project REACH</h3>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-green-400 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-700">Bridge proficiency gaps early</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-green-500 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-700">Ready for Primary 1</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-green-600 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-700">Equal opportunities</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-emerald-600 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-700 font-semibold">Better life outcomes</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </motion.section>
 
@@ -647,6 +687,11 @@ export default function WhatWeDo() {
                     📬 Read Thank You Messages
                   </Button>
                 </Link>
+                <a href="https://www.facebook.com/projectreachhk" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="lg" className="border-blue-500 text-blue-500 hover:bg-blue-50 text-lg px-8 py-4">
+                    📱 What's New
+                  </Button>
+                </a>
               </div>
             </CardContent>
           </Card>
