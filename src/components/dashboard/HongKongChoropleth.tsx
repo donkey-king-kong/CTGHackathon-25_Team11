@@ -75,8 +75,8 @@ export function HongKongChoropleth() {
       const bottom5Threshold = sortedDonations[Math.min(4, sortedDonations.length - 1)];
       
       return [
-        { color: '#059669', label: `Top Districts ($${bottom5Threshold.toLocaleString()}+)`, threshold: bottom5Threshold },
-        { color: '#dc2626', label: `Bottom 5 Districts (< $${bottom5Threshold.toLocaleString()})`, threshold: bottom5Threshold }
+        { color: '#059669', label: 'Top Districts', threshold: bottom5Threshold },
+        { color: '#dc2626', label: 'Bottom 5 Districts', threshold: bottom5Threshold }
       ];
     } else {
       // Some districts have 0 donations
