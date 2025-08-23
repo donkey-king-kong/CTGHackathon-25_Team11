@@ -360,40 +360,43 @@ export default function Messages() {
         </section>
 
         {/* CTA Section */}
-        <motion.section
+        {user && user.role == 'admin' && (
+          <motion.section
           className="py-20 bg-gradient-to-r from-brand-primary to-brand-secondary"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-        >
-          <div className="container mx-auto px-6 text-center">
-            <div className="max-w-2xl mx-auto text-white">
-              <motion.div
-                className="text-6xl mb-6"
-                animate={{ rotate: [0, -5, 5, 0] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                💌
-              </motion.div>
-              <h2 className="text-3xl font-bold mb-6">
-                Add Your Letter to the Collection
-              </h2>
-              <p className="text-lg mb-8 opacity-90">
-                Help us inspire more support by sharing a thank you letter from
-                your school or child.
-              </p>
-              <Button
-                size="lg"
-                className="bg-white text-brand-primary hover:bg-surface px-8 py-3 rounded-full font-semibold"
-                onClick={() => (window.location.href = "/messages/new")}
-              >
-                <Heart className="mr-2 h-5 w-5" />
-                Write a Letter
-              </Button>
+          >
+            <div className="container mx-auto px-6 text-center">
+              <div className="max-w-2xl mx-auto text-white">
+                <motion.div
+                  className="text-6xl mb-6"
+                  animate={{ rotate: [0, -5, 5, 0] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  💌
+                </motion.div>
+                <h2 className="text-3xl font-bold mb-6">
+                  Add Your Letter to the Collection
+                </h2>
+                <p className="text-lg mb-8 opacity-90">
+                  Help us inspire more support by sharing a thank you letter from
+                  your school or child.
+                </p>
+                <Button
+                  size="lg"
+                  className="bg-white text-brand-primary hover:bg-surface px-8 py-3 rounded-full font-semibold"
+                  onClick={() => (window.location.href = "/messages/new")}
+                >
+                  <Heart className="mr-2 h-5 w-5" />
+                  Write a Letter
+                </Button>
+              </div>
             </div>
-          </div>
-        </motion.section>
-      </div>
+          </motion.section>
+          )
+        }
+        
 
       {/* Message Lightbox */}
       <MessageLightbox
@@ -401,6 +404,9 @@ export default function Messages() {
         isOpen={isLightboxOpen}
         onClose={closeMessage}
       />
+
+    </div>
     </>
+
   );
 }
