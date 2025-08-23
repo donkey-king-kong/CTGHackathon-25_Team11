@@ -11,16 +11,23 @@ interface Donor {
 }
 
 export function TopDonors() {
+  console.log('TopDonors component is running!');
+  
   const [donors, setDonors] = useState<Donor[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('useEffect is running!');
     const fetchTopDonors = async () => {
+      console.log('fetchTopDonors function started!');
       try {
         const { data, error } = await supabase
           .from('donations')
           .select('donor_name, amount, lives_impacted')
           .order('amount', { ascending: false });
+
+        console.log('Supabase response:', { data, error });
+        console.log('Data length:', data?.length);
 
         if (error) throw error;
 

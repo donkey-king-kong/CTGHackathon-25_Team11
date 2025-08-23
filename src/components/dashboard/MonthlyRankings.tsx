@@ -22,12 +22,23 @@ export function MonthlyRankings() {
         const currentMonthStr = now.toISOString().slice(0, 7); // YYYY-MM format
         setCurrentMonth(now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }));
 
+        // Month boundaries
+        const startDate = `${currentMonthStr}-01`;
+        const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10);
+
+        console.log('Current month string:', currentMonthStr);
+        console.log('Date filter start:', startDate);
+        console.log('Date filter end:', endDate);
+
         const { data, error } = await supabase
           .from('donations')
           .select('donor_name, amount, lives_impacted, created_at')
-          .gte('created_at', `${currentMonthStr}-01`)
-          .lt('created_at', `${currentMonthStr}-32`)
+          .gte('created_at', startDate)
+          .lt('created_at', endDate)
           .order('amount', { ascending: false });
+
+        console.log('Monthly query response:', { data, error });
+        console.log('Monthly data length:', data?.length);
 
         if (error) throw error;
 
