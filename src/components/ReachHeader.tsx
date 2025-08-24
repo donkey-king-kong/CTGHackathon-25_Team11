@@ -11,7 +11,6 @@ const navigation = [
   { name: "Leaderboard", href: "/leaderboard" },
   { name: "Messages", href: "/messages" },
   { name: "Festival 2026", href: "/festival" },
-  { name: "Admin", href: "/admin" },
 ];
 
 export function ReachHeader() {
