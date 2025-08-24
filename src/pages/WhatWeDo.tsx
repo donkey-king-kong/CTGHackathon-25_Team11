@@ -134,72 +134,72 @@ export default function WhatWeDo() {
         </div>
       </section>
 
-      <div className="container mx-auto px-6 py-16">
+      <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
         {/* The Problem Section */}
         <motion.section 
-          className="mb-20"
+          className="mb-16 sm:mb-20"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <h2 className="text-3xl font-bold text-center mb-12 text-reach-green">The Challenge We Face</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12 text-reach-green leading-tight">The Challenge We Face</h2>
           <div className="max-w-4xl mx-auto">
             <div className="bg-white/80 backdrop-blur-sm border border-red-200 shadow-xl rounded-lg">
-              <div className="p-8">
-                <div className="grid md:grid-cols-1 gap-8 items-center">
+              <div className="p-4 sm:p-6 lg:p-8">
+                <div className="grid md:grid-cols-1 gap-6 sm:gap-8 items-center">
                   <div>
                     <div className="flex items-center mb-4">
-                      <AlertTriangle className="h-6 w-6 text-red-500 mr-3" />
-                      <h3 className="text-2xl font-bold text-gray-800">Hong Kong's Inequality Crisis</h3>
+                      <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 text-red-500 mr-3 flex-shrink-0" />
+                      <h3 className="text-xl sm:text-2xl font-bold text-gray-800 leading-tight">Hong Kong's Inequality Crisis</h3>
                     </div>
-                    <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+                    <p className="text-base sm:text-lg text-gray-700 mb-4 sm:mb-6 leading-relaxed">
                       Hong Kong is one of the most unequal cities in the world. We have{' '}
                       <strong>40,000 kindergarten students living below the poverty line.</strong>
                     </p>
-                    <p className="text-gray-600 mb-6 italic">
+                    <p className="text-gray-600 mb-4 sm:mb-6 italic text-sm sm:text-base leading-tight">
                       For these children, it's no longer about "winning at the starting line".
                     </p>
                     
                     {/* Three statistics side by side */}
-                    <div className="grid grid-cols-3 gap-4 mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">
                       <motion.div 
-                        className="bg-orange-100 p-4 rounded-lg text-center border border-orange-200"
+                        className="bg-orange-100 p-3 sm:p-4 rounded-lg text-center border border-orange-200"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <Home className="h-8 w-8 text-orange-600 mx-auto mb-2" />
-                        <div className="font-bold text-orange-600 text-xl mb-1">
+                        <Home className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600 mx-auto mb-2" />
+                        <div className="font-bold text-orange-600 text-lg sm:text-xl mb-1">
                           <CountingNumber target={8000} />
                         </div>
-                        <p className="text-xs text-gray-600 leading-tight">
+                        <p className="text-xs sm:text-sm text-gray-600 leading-tight px-1">
                           children from families in bedspace apartments, subdivided flats or rooftop huts
                         </p>
                       </motion.div>
 
                       <motion.div 
-                        className="bg-orange-100 p-4 rounded-lg text-center border border-orange-200"
+                        className="bg-orange-100 p-3 sm:p-4 rounded-lg text-center border border-orange-200"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <Utensils className="h-8 w-8 text-orange-600 mx-auto mb-2" />
-                        <div className="font-bold text-orange-600 text-xl mb-1">
+                        <Utensils className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600 mx-auto mb-2" />
+                        <div className="font-bold text-orange-600 text-lg sm:text-xl mb-1">
                           <CountingNumber target={5000} />
                         </div>
-                        <p className="text-xs text-gray-600 leading-tight">
+                        <p className="text-xs sm:text-sm text-gray-600 leading-tight px-1">
                           children aged 3-5 cannot even afford 3 meals a day
                         </p>
                       </motion.div>
 
                       <motion.div 
-                        className="bg-orange-100 p-4 rounded-lg text-center border border-orange-200"
+                        className="bg-orange-100 p-3 sm:p-4 rounded-lg text-center border border-orange-200 sm:col-span-2 lg:col-span-1"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <GraduationCap className="h-8 w-8 text-orange-600 mx-auto mb-2" />
-                        <div className="font-bold text-orange-600 text-xl mb-1">
+                        <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600 mx-auto mb-2" />
+                        <div className="font-bold text-orange-600 text-lg sm:text-xl mb-1">
                           <CountingNumber target={29} />
                         </div>
-                        <p className="text-xs text-gray-600 leading-tight">
+                        <p className="text-xs sm:text-sm text-gray-600 leading-tight px-1">
                           kindergartens closed in 2025-2026 — the most in a decade
                         </p>
                       </motion.div>
@@ -221,45 +221,45 @@ export default function WhatWeDo() {
                 <h4 className="text-xl font-bold text-green-800">Why Kindergartens Are Struggling</h4>
               </div>
               
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 <motion.div 
-                  className="bg-white rounded-lg p-4 text-center shadow-sm border border-gray-100"
+                  className="bg-white rounded-lg p-3 sm:p-4 text-center shadow-sm border border-gray-100"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-orange-600 font-bold text-lg">$</span>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-orange-600 font-bold text-base sm:text-lg">$</span>
                 </div>
-                  <h5 className="font-semibold text-gray-800 mb-2">Undersubsidized</h5>
-                  <p className="text-xs text-gray-600">
+                  <h5 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">Undersubsidized</h5>
+                  <p className="text-xs text-gray-600 leading-tight">
                     Less support than primary/secondary schools
                   </p>
                 </motion.div>
                 
                 <motion.div 
-                  className="bg-white rounded-lg p-4 text-center shadow-sm border border-gray-100"
+                  className="bg-white rounded-lg p-3 sm:p-4 text-center shadow-sm border border-gray-100"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-orange-600 font-bold text-lg">!</span>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-orange-600 font-bold text-base sm:text-lg">!</span>
                   </div>
-                  <h5 className="font-semibold text-gray-800 mb-2">Lack of Funding</h5>
-                  <p className="text-xs text-gray-600">
+                  <h5 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">Lack of Funding</h5>
+                  <p className="text-xs text-gray-600 leading-tight">
                     Limited support from NGOs & private sectors
                   </p>
                 </motion.div>
                 
                 <motion.div 
-                  className="bg-white rounded-lg p-4 text-center shadow-sm border border-gray-100"
+                  className="bg-white rounded-lg p-3 sm:p-4 text-center shadow-sm border border-gray-100 sm:col-span-2 lg:col-span-1"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-orange-600 font-bold text-lg">×</span>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-orange-600 font-bold text-base sm:text-lg">×</span>
                   </div>
-                  <h5 className="font-semibold text-gray-800 mb-2">Can't Help</h5>
-                  <p className="text-xs text-gray-600">
+                  <h5 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">Can't Help</h5>
+                  <p className="text-xs text-gray-600 leading-tight">
                     Unable to offer resources for students in need
                   </p>
                 </motion.div>
@@ -270,38 +270,38 @@ export default function WhatWeDo() {
 
         {/* Our Track Record */}
         <motion.section 
-          className="mb-20"
+          className="mb-16 sm:mb-20"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <h2 className="text-3xl font-bold text-center mb-12 text-reach-green">Our Track Record</h2>
-          <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12 text-reach-green leading-tight">Our Track Record</h2>
+          <div className="max-w-6xl mx-auto px-2 sm:px-4">
             <div className="bg-gradient-to-br from-reach-green/10 to-reach-orange/10 border-reach-green/20 shadow-xl rounded-lg overflow-hidden">
-              <div className="p-8">
-                <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="p-4 sm:p-6 lg:p-8">
+                <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
                   {/* Content Side - More Visual & Striking */}
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     {/* Main Impact Number */}
                     <div className="text-center lg:text-left">
-                      <div className="text-5xl lg:text-6xl font-bold text-reach-green mb-2 leading-none">
+                      <div className="text-4xl sm:text-5xl lg:text-6xl font-bold text-reach-green mb-2 leading-none">
                         400+
                       </div>
-                      <p className="text-lg font-semibold text-gray-800 mb-1">K3 Students Reached</p>
-                      <p className="text-gray-600">across 6 kindergartens & community centers</p>
+                      <p className="text-base sm:text-lg font-semibold text-gray-800 mb-1 leading-tight">K3 Students Reached</p>
+                      <p className="text-sm sm:text-base text-gray-600 leading-tight">across 6 kindergartens & community centers</p>
                     </div>
 
                     {/* Challenge Description */}
-                    <div className="bg-white/80 p-6 rounded-xl shadow-md border border-gray-200">
-                      <h3 className="text-xl font-semibold text-gray-800 mb-4">Turning the Tide</h3>
+                    <div className="bg-white/80 p-4 sm:p-6 rounded-xl shadow-md border border-gray-200">
+                      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 leading-tight">Turning the Tide</h3>
                       <div className="space-y-3">
                         <div className="flex items-center">
-                          <div className="text-2xl font-bold text-red-600 mr-4 min-w-16">80%</div>
-                          <p className="text-gray-700">of students couldn't recognize all 26 alphabets</p>
+                          <div className="text-xl sm:text-2xl font-bold text-red-600 mr-3 min-w-12 sm:min-w-16">80%</div>
+                          <p className="text-sm sm:text-base text-gray-700 leading-tight">of students couldn't recognize all 26 alphabets</p>
                         </div>
                         <div className="flex items-center">
-                          <div className="text-2xl font-bold text-amber-600 mr-4 min-w-16">Low</div>
-                          <p className="text-gray-700">vocabulary knowledge and sight word recognition</p>
+                          <div className="text-xl sm:text-2xl font-bold text-amber-600 mr-3 min-w-12 sm:min-w-16">Low</div>
+                          <p className="text-sm sm:text-base text-gray-700 leading-tight">vocabulary knowledge and sight word recognition</p>
                         </div>
                       </div>
                     </div>
@@ -372,60 +372,60 @@ export default function WhatWeDo() {
 
         {/* Our Curriculum */}
         <motion.section 
-          className="mb-20"
+          className="mb-16 sm:mb-20"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <h2 className="text-3xl font-bold text-center mb-12 text-reach-green">Our Proprietary Curriculum</h2>
-          <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12 text-reach-green leading-tight">Our Proprietary Curriculum</h2>
+          <div className="max-w-6xl mx-auto px-2 sm:px-4">
             <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-lg overflow-hidden">
-              <div className="p-8">
-                <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="p-4 sm:p-6 lg:p-8">
+                <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
                   {/* Content Side - Less Wordy */}
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     {/* Main Description */}
                     <div className="text-center lg:text-left">
-                      <div className="text-2xl font-bold text-reach-green mb-3">
+                      <div className="text-xl sm:text-2xl font-bold text-reach-green mb-3 leading-tight">
                         Curriculum Developed by Columbia & Harvard Trained Educators 
                       </div>
-                      <p className="text-lg text-gray-700 leading-relaxed">
+                      <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
                       <strong>Five key elements</strong> designed to prepare underserved K3 students for Primary 1 proficiency.
                       </p>
                     </div>
                     
                     {/* 5 Key Elements */}
-                    <div className="bg-white/80 p-6 rounded-xl shadow-md">
-                      <div className="grid grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
+                    <div className="bg-white/80 p-4 sm:p-6 rounded-xl shadow-md">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-reach-green/20 rounded-lg flex items-center justify-center">
-                            <span className="text-lg">🔤</span>
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-reach-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span className="text-base sm:text-lg">🔤</span>
                           </div>
-                          <span className="text-sm font-medium text-gray-700">Alphabet Recognition</span>
+                          <span className="text-xs sm:text-sm font-medium text-gray-700 leading-tight">Alphabet Recognition</span>
                         </div>
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-reach-orange/20 rounded-lg flex items-center justify-center">
-                            <span className="text-lg">👁️</span>
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-reach-orange/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span className="text-base sm:text-lg">👁️</span>
                           </div>
-                          <span className="text-sm font-medium text-gray-700">Sight Word Acquisition</span>
+                          <span className="text-xs sm:text-sm font-medium text-gray-700 leading-tight">Sight Word Acquisition</span>
                         </div>
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span className="text-lg">📚</span>
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span className="text-base sm:text-lg">📚</span>
                           </div>
-                          <span className="text-sm font-medium text-gray-700">Vocabulary Acquisition</span>
+                          <span className="text-xs sm:text-sm font-medium text-gray-700 leading-tight">Vocabulary Acquisition</span>
                         </div>
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <span className="text-lg">🔊</span>
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span className="text-base sm:text-lg">🔊</span>
                           </div>
-                          <span className="text-sm font-medium text-gray-700">Phonemic Awareness</span>
+                          <span className="text-xs sm:text-sm font-medium text-gray-700 leading-tight">Phonemic Awareness</span>
                         </div>
-                        <div className="flex items-center space-x-3 col-span-2 lg:col-span-1 xl:col-span-2 justify-center lg:justify-start xl:justify-start">
-                          <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <span className="text-lg">👆</span>
+                        <div className="flex items-center space-x-3 col-span-1 sm:col-span-2 justify-center sm:justify-start">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span className="text-base sm:text-lg">👆</span>
                           </div>
-                          <span className="text-sm font-medium text-gray-700">Point-and-Read</span>
+                          <span className="text-xs sm:text-sm font-medium text-gray-700 leading-tight">Point-and-Read</span>
                         </div>
                       </div>
                     </div>
@@ -497,28 +497,28 @@ export default function WhatWeDo() {
 
         {/* Our Project Interventions */}
         <motion.section 
-          className="mb-20"
+          className="mb-16 sm:mb-20"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <h2 className="text-3xl font-bold text-center mb-12 text-reach-green">Our Project Interventions</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12 text-reach-green leading-tight">Our Project Interventions</h2>
           <div className="max-w-6xl mx-auto">
-            <p className="text-xl text-center text-gray-600 mb-12">
+            <p className="text-lg sm:text-xl text-center text-gray-600 mb-8 sm:mb-12 leading-tight">
               Three targeted interventions to bridge Hong Kong's inequality gap:
             </p>
             
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               {/* Intervention 1 */}
               <Card className="bg-gradient-to-r from-reach-green/10 to-reach-orange/10 border-reach-green/20 shadow-lg">
-                <CardContent className="p-8">
-                  <div className="flex items-start gap-6">
-                    <div className="bg-reach-green text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold flex-shrink-0">
+                <CardContent className="p-4 sm:p-6 lg:p-8">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
+                    <div className="bg-reach-green text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-lg sm:text-xl font-bold flex-shrink-0 mx-auto sm:mx-0">
                       1
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-reach-green mb-4">EMPOWERING STUDENTS</h3>
-                      <p className="text-lg text-gray-700 leading-relaxed">
+                      <h3 className="text-xl sm:text-2xl font-bold text-reach-green mb-3 sm:mb-4 leading-tight text-center sm:text-left">EMPOWERING STUDENTS</h3>
+                      <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
                         <strong>20+ hours weekly</strong> of premium English programmes for K3 students 
                         from Hong Kong's poorest districts. Our storybook-based curriculum bridges 
                         critical English proficiency gaps.
@@ -530,19 +530,19 @@ export default function WhatWeDo() {
 
               {/* Intervention 2 */}
               <Card className="bg-gradient-to-r from-reach-orange/10 to-reach-green/10 border-reach-orange/20 shadow-lg">
-                <CardContent className="p-8">
-                  <div className="flex items-start gap-6">
-                    <div className="bg-reach-orange text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold flex-shrink-0">
+                <CardContent className="p-4 sm:p-6 lg:p-8">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
+                    <div className="bg-reach-orange text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-lg sm:text-xl font-bold flex-shrink-0 mx-auto sm:mx-0">
                       2
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-reach-orange mb-4">EMPOWERING PARENTS</h3>
-                      <p className="text-lg text-gray-700 leading-relaxed mb-4">
+                      <h3 className="text-xl sm:text-2xl font-bold text-reach-orange mb-3 sm:mb-4 leading-tight text-center sm:text-left">EMPOWERING PARENTS</h3>
+                      <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-3 sm:mb-4">
                         Home learning booklets with detailed instructions and video guides help parents 
                         support their children's progress between classes.
                       </p>
-                      <div className="bg-white/60 p-4 rounded-lg">
-                        <p className="text-gray-700">
+                      <div className="bg-white/60 p-3 sm:p-4 rounded-lg">
+                        <p className="text-gray-700 text-sm sm:text-base leading-tight">
                           Parents submit completed work for grading, increasing  
                           <strong> parent-child interaction by 3,000+ hours.</strong>
                         </p>
@@ -554,19 +554,19 @@ export default function WhatWeDo() {
 
               {/* Intervention 3 */}
               <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 shadow-lg">
-                <CardContent className="p-8">
-                  <div className="flex items-start gap-6">
-                    <div className="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold flex-shrink-0">
+                <CardContent className="p-4 sm:p-6 lg:p-8">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
+                    <div className="bg-blue-600 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-lg sm:text-xl font-bold flex-shrink-0 mx-auto sm:mx-0">
                       3
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-blue-600 mb-4">EMPOWERING KINDERGARTENS WITH DATA</h3>
-                      <p className="text-lg text-gray-700 leading-relaxed mb-4">
+                      <h3 className="text-xl sm:text-2xl font-bold text-blue-600 mb-3 sm:mb-4 leading-tight text-center sm:text-left">EMPOWERING KINDERGARTENS WITH DATA</h3>
+                      <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-3 sm:mb-4">
                         Our proprietary learning app handles pre- and post-programme assessments, 
                         providing instant student feedback.
                       </p>
-                      <div className="bg-white/60 p-4 rounded-lg">
-                        <p className="text-gray-700">
+                      <div className="bg-white/60 p-3 sm:p-4 rounded-lg">
+                        <p className="text-gray-700 text-sm sm:text-base leading-tight">
                           Learning data is analyzed and shared with kindergarten partners to 
                           drive continuous improvement.
                         </p>
@@ -581,46 +581,46 @@ export default function WhatWeDo() {
 
         {/* The Impact */}
         <motion.section 
-          className="mb-20"
+          className="mb-16 sm:mb-20"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.0 }}
         >
-          <h2 className="text-3xl font-bold text-center mb-12 text-reach-green">The Impact We're Making</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12 text-reach-green leading-tight">The Impact We're Making</h2>
           <div className="max-w-6xl mx-auto">
-            <p className="text-xl text-center text-gray-600 mb-12">
+            <p className="text-lg sm:text-xl text-center text-gray-600 mb-8 sm:mb-12 leading-tight">
               Breaking the Cycle
             </p>
             {/* Visual Cycle Comparison */}
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
               {/* Without Intervention */}
               <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200 shadow-lg">
-                <CardContent className="p-8">
-                  <div className="text-center mb-6">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <CardContent className="p-4 sm:p-6 lg:p-8">
+                  <div className="text-center mb-4 sm:mb-6">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 bg-red-500 rounded-full flex items-center justify-center">
+                      <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold text-red-700 mb-4">Without Intervention</h3>
+                    <h3 className="text-lg sm:text-xl font-bold text-red-700 mb-3 sm:mb-4 leading-tight">Without Intervention</h3>
                   </div>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-red-400 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-700">Academic gaps widen</p>
+                      <p className="text-sm sm:text-base text-gray-700 leading-tight">Academic gaps widen</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-red-500 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-700">Fall behind by Primary 1</p>
+                      <p className="text-sm sm:text-base text-gray-700 leading-tight">Fall behind by Primary 1</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-red-600 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-700">Many never catch up</p>
+                      <p className="text-sm sm:text-base text-gray-700 leading-tight">Many never catch up</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-red-700 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-700 font-semibold">Inequality gap grows</p>
+                      <p className="text-sm sm:text-base text-gray-700 font-semibold leading-tight">Inequality gap grows</p>
                     </div>
                   </div>
                 </CardContent>
@@ -628,32 +628,32 @@ export default function WhatWeDo() {
 
               {/* With Project REACH */}
               <Card className="bg-gradient-to-br from-green-50 to-emerald-100 border-green-200 shadow-lg">
-                <CardContent className="p-8">
-                  <div className="text-center mb-6">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-reach-green rounded-full flex items-center justify-center">
-                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <CardContent className="p-4 sm:p-6 lg:p-8">
+                  <div className="text-center mb-4 sm:mb-6">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 bg-reach-green rounded-full flex items-center justify-center">
+                      <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold text-reach-green mb-4">With Project REACH</h3>
+                    <h3 className="text-lg sm:text-xl font-bold text-reach-green mb-3 sm:mb-4 leading-tight">With Project REACH</h3>
                   </div>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-green-400 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-700">Bridge proficiency gaps early</p>
+                      <p className="text-sm sm:text-base text-gray-700 leading-tight">Bridge proficiency gaps early</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-green-500 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-700">Ready for Primary 1</p>
+                      <p className="text-sm sm:text-base text-gray-700 leading-tight">Ready for Primary 1</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-green-600 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-700">Equal opportunities</p>
+                      <p className="text-sm sm:text-base text-gray-700 leading-tight">Equal opportunities</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 bg-emerald-600 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-700 font-semibold">Better life outcomes</p>
+                      <p className="text-sm sm:text-base text-gray-700 font-semibold leading-tight">Better life outcomes</p>
                     </div>
                   </div>
                 </CardContent>
@@ -670,25 +670,25 @@ export default function WhatWeDo() {
           transition={{ duration: 0.8, delay: 1.2 }}
         >
           <Card className="max-w-4xl mx-auto bg-gradient-to-r from-reach-green/10 to-reach-orange/10 border-reach-green/20 shadow-xl">
-            <CardContent className="p-12">
-              <h2 className="text-3xl font-bold text-reach-green mb-6">Join Our Mission</h2>
-              <p className="text-xl text-gray-700 leading-relaxed mb-8">
+            <CardContent className="p-6 sm:p-8 lg:p-12">
+              <h2 className="text-2xl sm:text-3xl font-bold text-reach-green mb-4 sm:mb-6 leading-tight">Join Our Mission</h2>
+              <p className="text-lg sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8">
                 Help us give these children the equal opportunities they deserve. 
                 Together, we can break the cycle of educational inequality in Hong Kong.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <Link to="/donate">
-                  <Button size="lg" className="bg-reach-orange hover:bg-reach-orange/90 text-white text-lg px-8 py-4">
+                  <Button size="lg" className="bg-reach-orange hover:bg-reach-orange/90 text-white text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto">
                     💝 Support Our Work
                   </Button>
                 </Link>
                 <Link to="/messages">
-                  <Button variant="outline" size="lg" className="border-reach-green text-reach-green hover:bg-reach-green/10 text-lg px-8 py-4">
+                  <Button variant="outline" size="lg" className="border-reach-green text-reach-green hover:bg-reach-green/10 text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto">
                     📬 Read Thank You Messages
                   </Button>
                 </Link>
                 <a href="https://www.facebook.com/projectreachhk" target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="lg" className="border-blue-500 text-blue-500 hover:bg-blue-50 text-lg px-8 py-4">
+                  <Button variant="outline" size="lg" className="border-blue-500 text-blue-500 hover:bg-blue-50 text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto">
                     📱 What's New
                   </Button>
                 </a>

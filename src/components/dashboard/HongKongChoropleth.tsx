@@ -408,13 +408,13 @@ export function HongKongChoropleth() {
   if (loading) {
     return (
       <Card className="w-full">
-        <div className="p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <MapPin className="h-5 w-5" />
-            <h2 className="text-xl font-semibold">Hong Kong Donation Intensity Choropleth</h2>
+        <div className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2 mb-4">
+            <MapPin className="h-5 w-5 flex-shrink-0" />
+            <h2 className="text-lg sm:text-xl font-semibold leading-tight">Hong Kong Donation Intensity Choropleth</h2>
           </div>
           <div className="animate-pulse">
-            <div className="h-96 bg-muted rounded-lg"></div>
+            <div className="h-64 sm:h-96 bg-muted rounded-lg"></div>
           </div>
         </div>
       </Card>
@@ -426,13 +426,13 @@ export function HongKongChoropleth() {
 
   return (
     <div className="hong-kong-choropleth">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h3 className="text-lg font-semibold text-gray-800">Hong Kong Regional Donation Impact</h3>
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:space-x-3">
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed w-fit"
           >
             {refreshing ? 'Refreshing...' : 'Refresh Data'}
           </button>
@@ -443,14 +443,14 @@ export function HongKongChoropleth() {
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-md">
-          Error: {error}
+        <div className="mb-4 p-3 sm:p-4 bg-red-100 border border-red-300 text-red-700 rounded-md">
+          <p className="text-sm leading-relaxed">Error: {error}</p>
         </div>
       )}
 
       {loading && !geoJsonData && (
-        <div className="flex items-center justify-center h-64 bg-gray-100 rounded-lg">
-          <div className="text-gray-500">Loading Hong Kong map data...</div>
+        <div className="flex items-center justify-center h-48 sm:h-64 bg-gray-100 rounded-lg">
+          <div className="text-gray-500 text-sm sm:text-base text-center px-4">Loading Hong Kong map data...</div>
         </div>
       )}
 
@@ -459,7 +459,7 @@ export function HongKongChoropleth() {
           <MapContainer
             center={[22.3193, 114.1694]}
             zoom={10}
-            className="h-96 w-full rounded-lg border"
+            className="h-64 sm:h-80 md:h-96 w-full rounded-lg border"
             zoomControl={false}
           >
             <TileLayer
@@ -480,21 +480,21 @@ export function HongKongChoropleth() {
       )}
 
       {/* Dynamic Legend */}
-      <div className="mt-4 p-4 bg-white rounded-lg shadow-sm border">
+      <div className="mt-4 p-3 sm:p-4 bg-white rounded-lg shadow-sm border">
         <h4 className="text-sm font-semibold text-gray-700 mb-3">Donation Status by District</h4>
         <div className="space-y-2">
           {dynamicLegend.map((item, index) => (
             <div key={index} className="flex items-center space-x-3">
               <div 
-                className="w-4 h-4 rounded"
+                className="w-4 h-4 rounded flex-shrink-0"
                 style={{ backgroundColor: item.color }}
               ></div>
-              <span className="text-sm text-gray-600">{item.label}</span>
+              <span className="text-sm text-gray-600 leading-tight">{item.label}</span>
             </div>
           ))}
         </div>
         <div className="mt-3 pt-3 border-t border-gray-200">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 leading-relaxed">
             Red: Districts with no donations or bottom 5 performers. Green: Districts with donations or top performers.
             Auto-refreshes every 5 minutes.
           </p>
@@ -504,42 +504,43 @@ export function HongKongChoropleth() {
       {/* Data Summary */}
       {districtData.length > 0 && (
         <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
             <h4 className="text-sm font-semibold text-gray-700">Current District Data</h4>
             {/* Donate Button */}
             <a 
               href="/donate" 
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-sm font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-sm font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 w-fit"
             >
               <Heart className="h-3 w-3" />
               Donate
             </a>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
             {districtData.map((district) => (
               <motion.div
                 key={district.district_code}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
+                className="min-w-0"
               >
-                <Card className={`border-l-4 ${district.color === '#dc2626' ? 'border-red-500 bg-red-50 shadow-lg ring-2 ring-red-200 ring-opacity-50' : ''}`} 
+                <Card className={`border-l-4 h-full district-card ${district.color === '#dc2626' ? 'border-red-500 bg-red-50 shadow-lg ring-2 ring-red-200 ring-opacity-50' : ''}`} 
                       style={{ borderLeftColor: district.color }}>
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <MapPin className="h-4 w-4" style={{ color: district.color }} />
-                      <span className={`text-sm font-medium ${district.color === '#dc2626' ? 'text-red-800 font-semibold' : ''}`}>
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex items-start gap-2 mb-2">
+                      <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: district.color }} />
+                      <span className={`text-sm font-medium leading-tight break-words district-name ${district.color === '#dc2626' ? 'text-red-800 font-semibold' : ''}`}>
                         {district.district_name}
                       </span>
                     </div>
-                    <p className={`text-2xl font-bold mb-1 ${district.color === '#dc2626' ? 'text-red-700' : ''}`}>
+                    <p className={`text-xl sm:text-2xl font-bold mb-1 leading-tight ${district.color === '#dc2626' ? 'text-red-700' : ''}`}>
                       ${district.total_donations.toLocaleString()}
                     </p>
-                    <p className={`text-xs mb-2 ${district.color === '#dc2626' ? 'text-red-600' : 'text-muted-foreground'}`}>
+                    <p className={`text-xs mb-2 leading-tight ${district.color === '#dc2626' ? 'text-red-600' : 'text-muted-foreground'}`}>
                       Total Donations
                     </p>
                     <div className="flex justify-between text-xs">
-                      <span className={district.color === '#dc2626' ? 'text-red-600 font-medium' : ''}>
+                      <span className={`leading-tight ${district.color === '#dc2626' ? 'text-red-600 font-medium' : ''}`}>
                         Donations: {district.donation_count}
                       </span>
                     </div>
