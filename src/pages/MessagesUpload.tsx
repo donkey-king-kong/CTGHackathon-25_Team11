@@ -182,6 +182,7 @@ export default function MessagesUpload() {
       let mediaData = { urls: [] as string[], types: [] as string[] };
 
       if (mediaFiles.length > 0) {
+        // Upload media to supabase storage
         mediaData = await uploadMedia();
       }
 
@@ -495,9 +496,9 @@ export default function MessagesUpload() {
                     <SelectItem value="letterbox" className="text-lg">
                       📮 Magic Mailbox - Pops out like magic!
                     </SelectItem>
-                    <SelectItem value="candy" className="text-lg">
+                    {/* <SelectItem value="candy" className="text-lg">
                       🍭 Sweet Surprise - Unwraps like candy!
-                    </SelectItem>
+                    </SelectItem> */}
                   </SelectContent>
                 </Select>
                 <p className="text-sm text-indigo-500 mt-2">
