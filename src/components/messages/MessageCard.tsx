@@ -8,7 +8,6 @@ import { MessageAnimation } from "./MessageAnimation";
 interface Message {
   id: string;
   child_alias: string;
-  school: string;
   region: string;
   language: string;
   text: string;
@@ -28,16 +27,16 @@ interface MessageCardProps {
 
 const cardColors = [
   "from-pink-50 to-pink-100",
-  "from-blue-50 to-blue-100", 
+  "from-blue-50 to-blue-100",
   "from-yellow-50 to-yellow-100",
   "from-green-50 to-green-100",
   "from-purple-50 to-purple-100",
-  "from-orange-50 to-orange-100"
+  "from-orange-50 to-orange-100",
 ];
 
 export function MessageCard({ message, onOpen, index }: MessageCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   const getTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -68,7 +67,7 @@ export function MessageCard({ message, onOpen, index }: MessageCardProps) {
         <CardContent className="p-6">
           {/* Media Preview with Doodle Frame */}
           {message.media_urls.length > 0 && (
-            <motion.div 
+            <motion.div
               className="mb-4 relative"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.2 }}
@@ -89,64 +88,68 @@ export function MessageCard({ message, onOpen, index }: MessageCardProps) {
                 )}
               </div>
               {/* Doodle decorations */}
-              <div className="absolute -top-2 -right-2 text-2xl animate-bounce">⭐</div>
+              <div className="absolute -top-2 -right-2 text-2xl animate-bounce">
+                ⭐
+              </div>
               <div className="absolute -bottom-1 -left-2 text-xl">🌈</div>
             </motion.div>
           )}
 
           {/* Message Content in Handwriting Style */}
           <div className="space-y-3">
-            <motion.p 
+            <motion.p
               className="text-text leading-relaxed font-handwritten text-lg overflow-hidden"
-              style={{ 
+              style={{
                 fontFamily: "'Kalam', cursive",
-                display: '-webkit-box',
+                display: "-webkit-box",
                 WebkitLineClamp: 3,
-                WebkitBoxOrient: 'vertical' as const
+                WebkitBoxOrient: "vertical" as const,
               }}
               whileHover={{ scale: 1.02 }}
             >
               &quot;{message.text}&quot;
             </motion.p>
-            
+
             <div className="pt-2 border-t border-white/50">
-              <motion.p 
+              <motion.p
                 className="font-bold text-brand-primary text-lg"
                 whileHover={{ color: "#FF6B35" }}
               >
                 — {message.child_alias} 🌟
               </motion.p>
-              
-              {message.school && (
-                <p className="text-sm text-text-muted flex items-center mt-2">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  {message.school}
-                  {message.region && `, ${message.region}`}
-                </p>
-              )}
+
+              <p className="text-sm text-text-muted flex items-center mt-2">
+                <MapPin className="h-3 w-3 mr-1" />
+                {message.region}
+              </p>
             </div>
 
             {/* Tags with cute styling */}
             <div className="flex flex-wrap gap-2 pt-2">
-              <Badge 
-                variant="secondary" 
+              <Badge
+                variant="secondary"
                 className="text-xs bg-white/70 text-brand-primary border border-brand-primary/20"
               >
                 <Languages className="h-3 w-3 mr-1" />
-                {message.language === "en" ? "English" : message.language === "zh" ? "中文" : "Mixed"}
+                {message.language === "en"
+                  ? "English"
+                  : message.language === "zh"
+                  ? "中文"
+                  : "Mixed"}
               </Badge>
-              
+
               {Array.isArray(message.donors) && message.donors.length > 0 && (
                 <Badge
                   variant="outline"
                   className="text-xs bg-yellow-100 text-orange-600 border-orange-200"
                 >
+
                   💖 For: {message.donors.filter(Boolean).join(', ')}
                 </Badge>
               )}
 
-              <Badge 
-                variant="outline" 
+              <Badge
+                variant="outline"
                 className="text-xs bg-white/50 text-text-muted border-text-muted/20 flex items-center"
               >
                 <Calendar className="h-3 w-3 mr-1" />
@@ -159,9 +162,7 @@ export function MessageCard({ message, onOpen, index }: MessageCardProps) {
               className="text-center text-xs text-brand-primary opacity-0 group-hover:opacity-100 transition-opacity mt-3"
               animate={isHovered ? { y: [0, -2, 0] } : {}}
               transition={{ duration: 0.5, repeat: Infinity }}
-            >
-              Click to open this letter! 💌
-            </motion.div>
+            ></motion.div>
           </div>
         </CardContent>
       </Card>
