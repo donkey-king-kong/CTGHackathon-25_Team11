@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { PostGenerator } from "./PostGenerator";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   id: string;
@@ -236,30 +237,36 @@ export function MessageLightbox({
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.9, duration: 0.5 }}
                 >
-                  {message.media_urls.map((url, index) => (
-                    <div key={index} className="relative">
-                      <div className="bg-white p-4 rounded-lg shadow-lg transform rotate-1 hover:rotate-0 transition-transform">
-                        {message.media_types[index] === "image" ? (
-                          <img
-                            src={`/${url}`}
-                            alt="Child's drawing"
-                            className="w-full h-64 object-cover rounded"
-                          />
-                        ) : (
-                          <video
-                            src={`/${url}`}
-                            className="w-full h-64 object-cover rounded"
-                            controls
-                            autoPlay
-                            muted
-                          />
-                        )}
-                        <div className="mt-2 text-center text-sm text-text-muted font-handwritten">
-                          Made with love 💕
+                  {message.media_urls.map((url, index) => {
+
+                    const { data } = supabase.storage.from("message-media").getPublicUrl(url);
+
+                    const publicUrl = data.publicUrl;
+
+                    return(
+                      <div key={index} className="relative">
+                        <div className="bg-white p-4 rounded-lg shadow-lg transform rotate-1 hover:rotate-0 transition-transform">
+                          {message.media_types[index] === "image" ? (
+                            <img
+                              src={`${publicUrl}`}
+                              alt="Child's drawing"
+                              className="w-full h-64 object-cover rounded"
+                            />
+                          ) : (
+                            <video
+                              src={`${publicUrl}`}
+                              className="w-full h-64 object-cover rounded"
+                              controls
+                              autoPlay
+                              muted
+                            />
+                          )}
+                          <div className="mt-2 text-center text-sm text-text-muted font-handwritten">
+                            Made with love 💕
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                  )})}
                 </motion.div>
               )}
 
