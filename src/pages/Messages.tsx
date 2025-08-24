@@ -318,7 +318,7 @@ export default function Messages() {
                 />
               </div>
               <div className="flex items-center gap-4 ml-auto">
-                <Select value={regionFilter} onValueChange={setRegionFilter}>
+                {/* <Select value={regionFilter} onValueChange={setRegionFilter}>
                   <SelectTrigger className="w-48 bg-white/90 border-brand-primary/20">
                     <MapPin className="h-4 w-4 mr-2" />
                     <SelectValue placeholder="All Regions" />
@@ -337,7 +337,7 @@ export default function Messages() {
                     <SelectItem value="Wong Tai Sin">Wong Tai Sin</SelectItem>
                     <SelectItem value="Yau Tsim Mong">Yau Tsim Mong</SelectItem>
                   </SelectContent>
-                </Select>
+                </Select> */}
 
                 <Select
                   value={languageFilter}

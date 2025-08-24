@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Heart, MapPin, Calendar, Share2, Star } from "lucide-react";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   id: string;
@@ -89,20 +90,28 @@ export function PersonalizedMessageCard({
         {/* Media Preview */}
         {message.media_urls && message.media_urls.length > 0 && (
           <div className="relative h-32 overflow-hidden">
-            {message.media_types[0]?.startsWith("video") ? (
-              <video
-                src={message.media_urls[0]}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                style={{ transform: `rotate(${((index % 3) - 1) * 2}deg)` }}
-              />
-            ) : (
-              <img
-                src={message.media_urls[0]}
-                alt="Child's artwork or photo"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                style={{ transform: `rotate(${((index % 3) - 1) * 2}deg)` }}
-              />
-            )}
+            {(() => {
+              // Build public url
+              const { data } = supabase.storage
+                .from("message-media")
+                .getPublicUrl(message.media_urls[0]);
+              const publicUrl = data.publicUrl;
+
+              return message.media_types[0]?.startsWith("video") ? (
+                <video
+                  src={publicUrl}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  style={{ transform: `rotate(${((index % 3) - 1) * 2}deg)` }}
+                />
+              ) : (
+                <img
+                  src={publicUrl}
+                  alt="Child's artwork or photo"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  style={{ transform: `rotate(${((index % 3) - 1) * 2}deg)` }}
+                />
+              );
+            })()}
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           </div>
         )}
@@ -133,9 +142,7 @@ export function PersonalizedMessageCard({
                   </p>
                   <div className="flex items-center gap-1 text-xs text-gray-600">
                     <MapPin className="h-3 w-3" />
-                    <span>
-                     {message.region}
-                    </span>
+                    <span>{message.region}</span>
                   </div>
                 </div>
               </div>
