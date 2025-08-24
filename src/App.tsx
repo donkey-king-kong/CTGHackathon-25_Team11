@@ -15,7 +15,6 @@ import MessagesModerate from "./pages/MessagesModerate";
 import MessagesUpload from "./pages/MessagesUpload";
 import Auth from "./pages/Auth";
 import ReachHome from "./pages/ReachHome";
-import ReachAbout from "./pages/ReachAbout";
 import ReachDonate from "./pages/ReachDonate";
 import DonateSuccess from "./pages/DonateSuccess";
 import DonateCancel from "./pages/DonateCancel";
@@ -35,7 +34,6 @@ const App = () => (
             <Route path="/" element={<ReachHome />} />
             <Route path="/festival" element={<Festival />} />
             <Route path="/what-we-do" element={<WhatWeDo />} />
-            <Route path="/about" element={<ReachAbout />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
 
             <Route path="/donate" element={<ReachDonate />} />
