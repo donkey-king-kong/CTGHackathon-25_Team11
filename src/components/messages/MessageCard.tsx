@@ -153,8 +153,7 @@ export function MessageCard({ message, onOpen, index }: MessageCardProps) {
                   variant="outline"
                   className="text-xs bg-yellow-100 text-orange-600 border-orange-200"
                 >
-
-                  💖 For: {message.donors.filter(Boolean).join(', ')}
+                  💖 For: {message.donors.filter(Boolean).join(", ")}
                 </Badge>
               )}
 
