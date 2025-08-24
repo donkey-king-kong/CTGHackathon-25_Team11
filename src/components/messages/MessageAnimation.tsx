@@ -14,25 +14,25 @@ const animationVariants = {
     initial: { x: -100, y: -100, rotate: -45, opacity: 0 },
     animate: { x: 0, y: 0, rotate: 0, opacity: 1 },
     hover: { y: -8, rotate: 5 },
-    transition: { type: "spring" as const, duration: 0.8 }
+    transition: { type: "tween" as const, duration: 0.8 }
   },
   candy: {
     initial: { scale: 0, rotate: 180, opacity: 0 },
     animate: { scale: 1, rotate: 0, opacity: 1 },
-    hover: { scale: 1.05, rotate: [0, -5, 5, 0] },
-    transition: { type: "spring" as const, duration: 0.6 }
+    hover: { scale: 1.05, rotate: 5 },
+    transition: { type: "tween" as const, duration: 0.6 }
   },
   heart: {
     initial: { scale: 0, opacity: 0 },
     animate: { scale: 1, opacity: 1 },
-    hover: { scale: [1, 1.2, 1], transition: { duration: 0.4 } },
-    transition: { type: "spring" as const, duration: 0.5 }
+    hover: { scale: 1.2 },
+    transition: { type: "tween" as const, duration: 0.5 }
   },
   balloon: {
     initial: { y: 50, opacity: 0 },
     animate: { y: 0, opacity: 1 },
-    hover: { y: [-2, -8, -2], transition: { duration: 1, repeat: Infinity } },
-    transition: { type: "spring" as const, duration: 0.7 }
+    hover: { y: -8 },
+    transition: { type: "tween" as const, duration: 0.7 }
   },
   letterbox: {
     initial: { y: 20, opacity: 0 },
@@ -74,7 +74,7 @@ export function MessageAnimation({
       {/* Delivery icon */}
       <motion.div
         className="absolute -top-2 -right-2 text-2xl z-10"
-        animate={isHovered ? { rotate: [0, -10, 10, 0] } : {}}
+        animate={isHovered ? { rotate: 10 } : {}}
         transition={{ duration: 0.5 }}
       >
         {getIcon(animationType)}
@@ -105,9 +105,9 @@ export function MessageAnimation({
                 top: `${10 + (i % 3) * 30}%`
               }}
               animate={{
-                scale: [0, 1, 0],
-                rotate: [0, 180, 360],
-                opacity: [0, 1, 0]
+                scale: 1,
+                rotate: 180,
+                opacity: 1
               }}
               transition={{
                 duration: 1,

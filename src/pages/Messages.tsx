@@ -26,6 +26,7 @@ import { LetterboxHero } from "@/components/messages/LetterboxHero";
 import { MessageCard } from "@/components/messages/MessageCard";
 import { PersonalizedMessageCard } from "@/components/messages/PersonalizedMessageCard";
 import { MessageLightbox } from "@/components/messages/MessageLightbox";
+import { MessageLightbox as DramaticMessageLightbox } from "@/components/messages/animation";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
@@ -389,7 +390,29 @@ export default function Messages() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-              ></motion.div>
+              >
+                {currentTab === "personal" ? (
+                  <div>
+                    <div className="text-6xl mb-4">📭</div>
+                    <h3 className="text-xl font-semibold mb-2 text-text-muted">
+                      No personal messages yet
+                    </h3>
+                    <p className="text-text-muted">
+                      When someone sends you a personal thank you letter, it will appear here!
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="text-6xl mb-4">📬</div>
+                    <h3 className="text-xl font-semibold mb-2 text-text-muted">
+                      No messages found
+                    </h3>
+                    <p className="text-text-muted">
+                      Try adjusting your search filters.
+                    </p>
+                  </div>
+                )}
+              </motion.div>
             ) : (
               <motion.div
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
@@ -420,13 +443,21 @@ export default function Messages() {
           </div>
         </section>
 
-        {/* Message Lightbox */}
-        <MessageLightbox
-          message={selectedMessage}
-          isOpen={isLightboxOpen}
-          onClose={closeMessage}
-          donorName={profile?.full_name ?? "You"}
-        />
+        {/* Message Lightbox - Dramatic animations for "For You" messages */}
+        {currentTab === "personal" && selectedMessage?.donors?.includes(user?.id) ? (
+          <DramaticMessageLightbox
+            message={selectedMessage}
+            isOpen={isLightboxOpen}
+            onClose={closeMessage}
+          />
+        ) : (
+          <MessageLightbox
+            message={selectedMessage}
+            isOpen={isLightboxOpen}
+            onClose={closeMessage}
+            donorName={profile?.full_name ?? "You"}
+          />
+        )}
       </div>
     </>
   );
