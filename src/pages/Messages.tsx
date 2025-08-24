@@ -63,36 +63,31 @@ export default function Messages() {
   const [session, setSession] = useState<any>(null);
   const [currentTab, setCurrentTab] = useState<"public" | "personal">("public");
 
-  // useEffect(() => {
-  //   // Check auth state
-  //   const checkAuth = async () => {
-  //     const {
-  //       data: { session },
-  //     } = await supabase.auth.getSession();
-  //     setSession(session);
-  //     setUser(session?.user ?? null);
-  //   };
-
-  //   checkAuth();
-
-  //   // Listen for auth changes
-  //   const {
-  //     data: { subscription },
-  //   } = supabase.auth.onAuthStateChange((event, session) => {
-  //     setSession(session);
-  //     setUser(session?.user ?? null);
-  //   });
-
-  //   fetchMessages();
-
-  //   return () => subscription.unsubscribe();
-  // }, []);
-
-
   useEffect(() => {
-    setUser({"idx":4,"id":"d5284bd6-00b9-49a8-8ee5-74179ff18074","email":null,"full_name":"Ryan Tan","role":"donor","created_at":"2025-08-23 06:46:02.811051+00","updated_at":"2025-08-23 06:46:02.811051+00","phone":null,"organization_name":null,"region":null})
-    fetchMessages()
-  }, [])
+    // Check auth state
+    const checkAuth = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setSession(session);
+      setUser(session?.user ?? null);
+    };
+    
+    checkAuth();
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    });
+
+    fetchMessages();
+
+  
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
