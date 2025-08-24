@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { PostGenerator } from "./PostGenerator";
 
 interface Message {
   id: string;
@@ -78,6 +79,8 @@ export function MessageLightbox({ message, isOpen, onClose }: MessageLightboxPro
       toast.error('Failed to share message');
     }
   };
+
+
 
 
 
@@ -495,15 +498,9 @@ export function MessageLightbox({ message, isOpen, onClose }: MessageLightboxPro
                   </p>
                 </div>
                 
-                {/* Share button */}
+                {/* Instagram Post Generator */}
                 <div className="flex justify-center">
-                  <Button
-                    onClick={handleShare}
-                    className="bg-brand-primary hover:bg-brand-primary-dark text-white"
-                  >
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share this message
-                  </Button>
+                  <PostGenerator message={message} />
                 </div>
               </motion.div>
             </div>
