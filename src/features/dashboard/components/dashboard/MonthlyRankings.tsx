@@ -192,7 +192,7 @@ export function MonthlyRankings() {
                   <Star className="h-4 w-4 text-brand-secondary" />
                 </div>
                 
-                <div className="relative flex items-center justify-between">
+                <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                   <div className="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
                     {/* Enhanced rank indicator */}
                     <div className={`flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl font-bold text-lg sm:text-xl shadow-xl flex-shrink-0 ${getRankBackground(index + 1)} ${getRankTextColor(index + 1)} relative`}>
@@ -203,14 +203,14 @@ export function MonthlyRankings() {
                     
                     {/* Donor information */}
                     <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
-                      <h3 className="font-bold text-lg sm:text-xl text-gray-800 group-hover:text-brand-primary transition-colors duration-300 truncate">
+                      <h3 className="font-bold text-lg sm:text-xl text-gray-800 group-hover:text-brand-primary transition-colors duration-300 break-words leading-tight">
                         {donor.donor_name}
                       </h3>
                       <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
                         <div className="p-1.5 sm:p-2 rounded-full bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 shadow-md flex-shrink-0">
                           <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-brand-primary" />
                         </div>
-                        <span className="font-semibold truncate">
+                        <span className="font-semibold break-words leading-tight">
                           ~{donor.lives_impacted} lives impacted
                         </span>
                         <Heart className="h-3 w-3 sm:h-4 sm:w-4 text-brand-secondary animate-pulse flex-shrink-0" />
@@ -219,7 +219,7 @@ export function MonthlyRankings() {
                   </div>
                   
                   {/* Donation amount */}
-                  <div className="text-right flex-shrink-0 ml-2">
+                  <div className="text-center sm:text-right flex-shrink-0">
                     <p className="text-2xl sm:text-3xl font-black text-brand-secondary group-hover:text-brand-secondary-dark transition-colors duration-300 drop-shadow-sm">
                       ${donor.amount.toLocaleString()}
                     </p>
