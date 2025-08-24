@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, Crown, Medal, MapPin, TrendingUp, Users, DollarSign, Award, AlertCircle, TrendingDown } from "lucide-react";
+import { Trophy, Crown, Medal, MapPin, TrendingUp, Users, DollarSign, Award, AlertCircle, TrendingDown, Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface District {
@@ -272,6 +272,17 @@ export function TopDonors() {
                       <p className="text-xl font-bold text-orange-800">These districts need your help to reach more children!</p>
                       <p className="text-orange-600 mt-1">Consider supporting these areas to maximize your impact</p>
                     </div>
+                  </div>
+                  
+                  {/* Donate Now Button */}
+                  <div className="mt-6">
+                    <a 
+                      href="/donate" 
+                      className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                    >
+                      <Heart className="h-5 w-5" />
+                      Donate Now to Support These Districts
+                    </a>
                   </div>
                 </div>
               </div>
