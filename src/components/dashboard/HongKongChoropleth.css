@@ -95,14 +95,57 @@
   cursor: not-allowed;
 }
 
+/* Mobile-first responsive design */
+.hong-kong-choropleth {
+  width: 100%;
+}
+
+/* District cards mobile optimization */
+.hong-kong-choropleth .district-card {
+  min-height: 120px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Text handling for mobile */
+.hong-kong-choropleth h3 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.hong-kong-choropleth .district-name {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
 /* Responsive map sizing */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .choropleth-container {
     height: 300px;
   }
   
   .macro-region-stats {
     grid-template-columns: 1fr;
+  }
+  
+  .hong-kong-choropleth .district-card {
+    min-height: 100px;
+  }
+  
+  .hong-kong-choropleth h3 {
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .choropleth-container {
+    height: 350px;
+  }
+  
+  .macro-region-stats {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
