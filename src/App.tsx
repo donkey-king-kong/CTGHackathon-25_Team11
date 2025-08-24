@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import Layout from "./components/Layout";
 import Leaderboard from "./pages/Leaderboard";
-import Stories from "./pages/Stories";
+
 import Admin from "./pages/Admin";
 import Festival from "./pages/Festival";
 import WhatWeDo from "./pages/WhatWeDo";
@@ -37,7 +37,7 @@ const App = () => (
             <Route path="/what-we-do" element={<WhatWeDo />} />
             <Route path="/about" element={<ReachAbout />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/stories" element={<Stories />} />
+
             <Route path="/donate" element={<ReachDonate />} />
             <Route path="/donate/success" element={<DonateSuccess />} />
             <Route path="/donate/cancel" element={<DonateCancel />} />
