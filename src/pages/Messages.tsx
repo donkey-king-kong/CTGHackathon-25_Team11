@@ -128,9 +128,10 @@ export default function Messages() {
   const fetchMessages = async () => {
     try {
       let query = supabase
-        .from("messages")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('messages')
+        .select('*')
+        // .eq('status', 'approved')
+        .order('created_at', { ascending: false });
 
       const { data, error } = await query;
 
