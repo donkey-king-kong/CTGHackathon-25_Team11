@@ -169,7 +169,7 @@ export function MessageCard({ message, onOpen, index }: MessageCardProps) {
             {/* Hover hint */}
             <motion.div
               className="text-center text-xs text-brand-primary opacity-0 group-hover:opacity-100 transition-opacity mt-3"
-              animate={isHovered ? { y: [0, -2, 0] } : {}}
+              animate={isHovered ? { y: -2 } : {}}
               transition={{ duration: 0.5, repeat: Infinity }}
             ></motion.div>
           </div>
