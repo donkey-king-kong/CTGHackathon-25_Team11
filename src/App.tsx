@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import Layout from "./components/Layout";
 import Leaderboard from "./pages/Leaderboard";
-import Stories from "./pages/Stories";
+
 import Admin from "./pages/Admin";
 import Festival from "./pages/Festival";
 import WhatWeDo from "./pages/WhatWeDo";
@@ -15,7 +15,6 @@ import MessagesModerate from "./pages/MessagesModerate";
 import MessagesUpload from "./pages/MessagesUpload";
 import Auth from "./pages/Auth";
 import ReachHome from "./pages/ReachHome";
-import ReachAbout from "./pages/ReachAbout";
 import ReachDonate from "./pages/ReachDonate";
 import DonateSuccess from "./pages/DonateSuccess";
 import DonateCancel from "./pages/DonateCancel";
@@ -35,9 +34,8 @@ const App = () => (
             <Route path="/" element={<ReachHome />} />
             <Route path="/festival" element={<Festival />} />
             <Route path="/what-we-do" element={<WhatWeDo />} />
-            <Route path="/about" element={<ReachAbout />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/stories" element={<Stories />} />
+
             <Route path="/donate" element={<ReachDonate />} />
             <Route path="/donate/success" element={<DonateSuccess />} />
             <Route path="/donate/cancel" element={<DonateCancel />} />
