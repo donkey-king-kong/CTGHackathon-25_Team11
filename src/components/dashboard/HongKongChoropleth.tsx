@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { MapPin } from "lucide-react";
+import { MapPin, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
 import type { Feature, Geometry } from "geojson";
@@ -405,8 +405,6 @@ export function HongKongChoropleth() {
     return () => clearInterval(interval);
   }, [fetchDonationData]);
 
-
-
   if (loading) {
     return (
       <Card className="w-full">
@@ -506,7 +504,17 @@ export function HongKongChoropleth() {
       {/* Data Summary */}
       {districtData.length > 0 && (
         <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">Current District Data</h4>
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-semibold text-gray-700">Current District Data</h4>
+            {/* Donate Button */}
+            <a 
+              href="/donate" 
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-sm font-medium rounded-md shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+            >
+              <Heart className="h-3 w-3" />
+              Donate
+            </a>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {districtData.map((district) => (
               <motion.div
