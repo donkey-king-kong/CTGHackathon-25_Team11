@@ -44,7 +44,10 @@ interface Message {
   school: string;
 }
 
-type Profile = { full_name: string | null };
+type Profile = {
+  full_name: string | null;
+  role: string | null;
+};
 
 export default function Messages() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -89,11 +92,14 @@ export default function Messages() {
     let cancelled = false;
 
     async function loadProfile() {
-      if (!user?.id) { setProfile(null); return; }
+      if (!user?.id) {
+        setProfile(null);
+        return;
+      }
 
       const { data, error } = await supabase
         .from("profiles")
-        .select("full_name")
+        .select("full_name, role")
         .eq("id", user.id)
         .single();
 
@@ -108,14 +114,14 @@ export default function Messages() {
     }
 
     loadProfile();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user?.id]);
 
   useEffect(() => {
     filterMessages();
-  }, [messages, searchQuery, regionFilter, languageFilter, currentTab, 
-    user
-  ]);
+  }, [messages, searchQuery, regionFilter, languageFilter, currentTab, user]);
 
   const fetchMessages = async () => {
     try {
@@ -139,8 +145,8 @@ export default function Messages() {
             : [],
           donors: Array.isArray(msg.donors)
             ? msg.donors.map((d: unknown) => String(d))
-            : [],                     // <- ensure always an array
-          type: typeof msg.type === 'string' ? msg.type : 'public', // <- ensure always a string
+            : [], // <- ensure always an array
+          type: typeof msg.type === "string" ? msg.type : "public", // <- ensure always a string
         }))
       );
       // console.log(messages)
@@ -159,7 +165,7 @@ export default function Messages() {
     if (currentTab === "personal") {
       // Fetch messsages tagged to this specific user and general messages
       filtered = filtered.filter(
-        (message) => user && (message.donors?.includes(user.id))
+        (message) => user && message.donors?.includes(user.id)
       );
     } else {
       // Show only general messages
@@ -220,6 +226,42 @@ export default function Messages() {
 
   return (
     <>
+      {/* CTA Section */}
+      {profile?.role == "admin" && (
+        <motion.section
+          className="py-20 bg-gradient-to-r from-brand-primary to-brand-secondary"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+        >
+          <div className="container mx-auto px-6 text-center">
+            <div className="max-w-2xl mx-auto text-white">
+              <motion.div
+                className="text-6xl mb-6"
+                animate={{ rotate: [0, -5, 5, 0] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                💌
+              </motion.div>
+              <h2 className="text-3xl font-bold mb-6">
+                Add Your Letter to the Collection
+              </h2>
+              <p className="text-lg mb-8 opacity-90">
+                Help us inspire more support by sharing a thank you letter from
+                your school or child.
+              </p>
+              <Button
+                size="lg"
+                className="bg-white text-brand-primary hover:bg-surface px-8 py-3 rounded-full font-semibold"
+                onClick={() => (window.location.href = "/messages/new")}
+              >
+                <Heart className="mr-2 h-5 w-5" />
+                Write a Letter
+              </Button>
+            </div>
+          </div>
+        </motion.section>
+      )}
       <div className="min-h-screen bg-gradient-to-br from-pink-50 via-blue-50 to-yellow-50">
         {/* Letterbox Hero */}
         <LetterboxHero messageCount={filteredMessages.length} />
@@ -344,8 +386,7 @@ export default function Messages() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-              >
-              </motion.div>
+              ></motion.div>
             ) : (
               <motion.div
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
@@ -360,7 +401,7 @@ export default function Messages() {
                       message={message}
                       onOpen={openMessage}
                       index={index}
-                      donorName={(profile?.full_name ?? "You")}
+                      donorName={profile?.full_name ?? "You"}
                     />
                   ) : (
                     <MessageCard
@@ -376,54 +417,14 @@ export default function Messages() {
           </div>
         </section>
 
-        {/* CTA Section */}
-        {user?.role == 'admin' && (
-          <motion.section
-          className="py-20 bg-gradient-to-r from-brand-primary to-brand-secondary"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            <div className="container mx-auto px-6 text-center">
-              <div className="max-w-2xl mx-auto text-white">
-                <motion.div
-                  className="text-6xl mb-6"
-                  animate={{ rotate: [0, -5, 5, 0] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                >
-                  💌
-                </motion.div>
-                <h2 className="text-3xl font-bold mb-6">
-                  Add Your Letter to the Collection
-                </h2>
-                <p className="text-lg mb-8 opacity-90">
-                  Help us inspire more support by sharing a thank you letter from
-                  your school or child.
-                </p>
-                <Button
-                  size="lg"
-                  className="bg-white text-brand-primary hover:bg-surface px-8 py-3 rounded-full font-semibold"
-                  onClick={() => (window.location.href = "/messages/new")}
-                >
-                  <Heart className="mr-2 h-5 w-5" />
-                  Write a Letter
-                </Button>
-              </div>
-            </div>
-          </motion.section>
-          )
-        }
-        
-
-      {/* Message Lightbox */}
-      <MessageLightbox
-        message={selectedMessage}
-        isOpen={isLightboxOpen}
-        onClose={closeMessage}
-        donorName={(profile?.full_name ?? "You")}
-      />
-    </div>
+        {/* Message Lightbox */}
+        <MessageLightbox
+          message={selectedMessage}
+          isOpen={isLightboxOpen}
+          onClose={closeMessage}
+          donorName={profile?.full_name ?? "You"}
+        />
+      </div>
     </>
-
   );
 }
