@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Heart, CreditCard, Smartphone, DollarSign, Users, BookOpen, Target } from "lucide-react";
+import { Heart, CreditCard, Smartphone, DollarSign, Users, BookOpen, Target, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ export default function ReachDonate() {
   const [message, setMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [region, setRegion] = useState("");
 
   const donationAmounts = {
     hkd: [
@@ -34,6 +35,11 @@ export default function ReachDonate() {
       { amount: 500, lives: 10, description: "School supplies & English storybooks for 10 children" },
     ]
   };
+
+ const regions = ["Central & Western", "Eastern", "Southern", "Wan Chai", "Kowloon City", 
+  "Kwun Tong", "Sham Shui Po", "Wong Tai Sin", "Yau Tsim Mong", "Islands", "Kwai Tsing", 
+  "North", "Sai Kung", "Sha Tin", "Tai Po", "Tsuen Wan", "Tuen Mun", "Yuen Long"];
+
 
   const calculateLivesImpacted = (donationAmount: number) => {
     if (currency === 'sgd') {
@@ -76,7 +82,8 @@ export default function ReachDonate() {
           amount: amountInCents,
           currency: currency.toLowerCase(),
           message,
-          isAnonymous
+          isAnonymous,
+          region
         }
       });
 
@@ -246,6 +253,30 @@ export default function ReachDonate() {
                       />
                     </div>
                   </div>
+
+                  {/* Region selection */}
+
+                  <div>
+                    <Label htmlFor="region" className="text-base font-semibold">
+                      Would you like your contribution to support a specific region*?
+                    </Label>
+                    <p className="text-xs text-text-muted mb-3 flex items-center">
+                     REACH will make every effort to allocate funds accordingly; however, this cannot be guaranteed.
+                    </p>
+                    
+                    <Select value={region} onValueChange={setRegion}>
+                      <SelectTrigger className="w-48 bg-white/90 border-brand-primary/20">
+                        <MapPin className="h-4 w-4 mr-2" />
+                        <SelectValue placeholder="All Regions" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {regions.map((region) => (
+                          <SelectItem key={region} value={region} className="text-lg">{region}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
 
                   {/* Optional Message */}
                   <div>
