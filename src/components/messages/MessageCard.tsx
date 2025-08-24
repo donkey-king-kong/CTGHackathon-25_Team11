@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Calendar, Languages } from "lucide-react";
 import { MessageAnimation } from "./MessageAnimation";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   id: string;
@@ -14,7 +15,7 @@ interface Message {
   media_urls: string[];
   media_types: string[];
   donors: string[];
-  type: string,
+  type: string;
   created_at: string;
   animation_type: string;
 }
@@ -73,20 +74,29 @@ export function MessageCard({ message, onOpen, index }: MessageCardProps) {
               transition={{ duration: 0.2 }}
             >
               <div className="rounded-lg overflow-hidden border-4 border-white shadow-md transform rotate-1">
-                {message.media_types[0] === "image" ? (
-                  <img
-                    src={`/${message.media_urls[0]}`}
-                    alt="Child's drawing"
-                    className="w-full h-40 object-cover"
-                  />
-                ) : (
-                  <video
-                    src={`/${message.media_urls[0]}`}
-                    className="w-full h-40 object-cover"
-                    poster=""
-                  />
-                )}
+                {(() => {
+                  const { data } = supabase.storage
+                    .from("message-media")
+                    .getPublicUrl(message.media_urls[0]);
+                  const publicUrl = data.publicUrl;
+
+                  return message.media_types[0] === "image" ? (
+                    <img
+                      src={publicUrl}
+                      alt="Child's drawing"
+                      className="w-full h-40 object-cover"
+                    />
+                  ) : (
+                    <video
+                      src={publicUrl}
+                      className="w-full h-40 object-cover"
+                      poster=""
+                      controls
+                    />
+                  );
+                })()}
               </div>
+
               {/* Doodle decorations */}
               <div className="absolute -top-2 -right-2 text-2xl animate-bounce">
                 ⭐
@@ -143,8 +153,7 @@ export function MessageCard({ message, onOpen, index }: MessageCardProps) {
                   variant="outline"
                   className="text-xs bg-yellow-100 text-orange-600 border-orange-200"
                 >
-
-                  💖 For: {message.donors.filter(Boolean).join(', ')}
+                  💖 For: {message.donors.filter(Boolean).join(", ")}
                 </Badge>
               )}
 
