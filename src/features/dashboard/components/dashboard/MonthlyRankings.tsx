@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Calendar, TrendingUp, Trophy, Medal, Award, Star, Heart, Sparkles } from "lucide-react";
 import { supabase } from "@/infrastructure/supabase/client";
@@ -133,10 +133,10 @@ export function MonthlyRankings() {
             <Sparkles className="h-6 w-6 text-brand-secondary animate-pulse" />
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
-          <div className="animate-pulse space-y-4">
+        <CardContent className="p-4 sm:p-6">
+          <div className="animate-pulse space-y-3 sm:space-y-4">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-20 bg-gradient-to-r from-muted/50 to-muted/30 rounded-xl"></div>
+              <div key={i} className="h-16 sm:h-20 bg-gradient-to-r from-muted/50 to-muted/30 rounded-xl"></div>
             ))}
           </div>
         </CardContent>
@@ -154,27 +154,27 @@ export function MonthlyRankings() {
           <div className="absolute bottom-0 left-1/2 w-20 h-20 bg-brand-primary/20 rounded-full -translate-x-10 translate-y-10"></div>
         </div>
         
-        <CardTitle className="flex items-center gap-3 text-2xl font-bold text-brand-primary relative z-10">
-          <div className="p-3 rounded-xl bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 shadow-lg">
-            <Calendar className="h-7 w-7 text-brand-primary" />
+        <CardTitle className="flex items-center gap-2 sm:gap-3 text-xl sm:text-2xl font-bold text-brand-primary relative z-10">
+          <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 shadow-lg">
+            <Calendar className="h-5 w-5 sm:h-7 sm:w-7 text-brand-primary" />
           </div>
-          Monthly Donor Rankings
-          <Sparkles className="h-6 w-6 text-brand-secondary animate-pulse" />
+          <span className="text-lg sm:text-2xl">Monthly Donor Rankings</span>
+          <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-brand-secondary animate-pulse" />
         </CardTitle>
-        <CardDescription className="text-lg text-brand-primary/80 mt-3 relative z-10 font-medium">
+        <CardDescription className="text-base sm:text-lg text-brand-primary/80 mt-2 sm:mt-3 relative z-10 font-medium">
           Top contributors for {currentMonth}
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-6">
+      <CardContent className="p-4 sm:p-6">
         {monthlyDonors.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="mx-auto w-20 h-20 bg-gradient-to-br from-muted/50 to-muted/30 rounded-full flex items-center justify-center mb-6 shadow-lg">
-              <Calendar className="h-10 w-10 text-muted-foreground" />
+          <div className="text-center py-12 sm:py-16">
+            <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-muted/50 to-muted/30 rounded-full flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+              <Calendar className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
             </div>
-            <p className="text-muted-foreground text-xl font-semibold mb-2">No donations recorded for this month yet.</p>
-            <p className="text-muted-foreground/70 text-base">Be the first to make a difference!</p>
-            <div className="mt-6 flex justify-center">
-              <Heart className="h-8 w-8 text-brand-secondary animate-pulse" />
+            <p className="text-muted-foreground text-lg sm:text-xl font-semibold mb-2">No donations recorded for this month yet.</p>
+            <p className="text-muted-foreground/70 text-sm sm:text-base">Be the first to make a difference!</p>
+            <div className="mt-4 sm:mt-6 flex justify-center">
+              <Heart className="h-6 w-6 sm:h-8 sm:w-8 text-brand-secondary animate-pulse" />
             </div>
           </div>
         ) : (
@@ -182,7 +182,7 @@ export function MonthlyRankings() {
             {monthlyDonors.map((donor, index) => (
               <div 
                 key={`${donor.donor_name}-${index}`}
-                className={`group relative overflow-hidden rounded-2xl border-2 p-6 transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] hover:rotate-1 ${getRowBackground(index + 1)}`}
+                className={`group relative overflow-hidden rounded-xl sm:rounded-2xl border-2 p-4 sm:p-6 transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] hover:rotate-1 ${getRowBackground(index + 1)}`}
               >
                 {/* Background accent on hover */}
                 <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -193,34 +193,34 @@ export function MonthlyRankings() {
                 </div>
                 
                 <div className="relative flex items-center justify-between">
-                  <div className="flex items-center gap-5">
+                  <div className="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
                     {/* Enhanced rank indicator */}
-                    <div className={`flex items-center justify-center w-16 h-16 rounded-2xl font-bold text-xl shadow-xl ${getRankBackground(index + 1)} ${getRankTextColor(index + 1)} relative`}>
+                    <div className={`flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl font-bold text-lg sm:text-xl shadow-xl flex-shrink-0 ${getRankBackground(index + 1)} ${getRankTextColor(index + 1)} relative`}>
                       {getRankIcon(index + 1) || (index + 1)}
                       {/* Glow effect */}
-                      <div className="absolute inset-0 rounded-2xl bg-white/20 blur-sm"></div>
+                      <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-white/20 blur-sm"></div>
                     </div>
                     
                     {/* Donor information */}
-                    <div className="space-y-2">
-                      <h3 className="font-bold text-xl text-gray-800 group-hover:text-brand-primary transition-colors duration-300">
+                    <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
+                      <h3 className="font-bold text-lg sm:text-xl text-gray-800 group-hover:text-brand-primary transition-colors duration-300 truncate">
                         {donor.donor_name}
                       </h3>
-                      <div className="flex items-center gap-3 text-sm text-gray-600">
-                        <div className="p-2 rounded-full bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 shadow-md">
-                          <TrendingUp className="h-4 w-4 text-brand-primary" />
+                      <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
+                        <div className="p-1.5 sm:p-2 rounded-full bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 shadow-md flex-shrink-0">
+                          <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-brand-primary" />
                         </div>
-                        <span className="font-semibold">
+                        <span className="font-semibold truncate">
                           ~{donor.lives_impacted} lives impacted
                         </span>
-                        <Heart className="h-4 w-4 text-brand-secondary animate-pulse" />
+                        <Heart className="h-3 w-3 sm:h-4 sm:w-4 text-brand-secondary animate-pulse flex-shrink-0" />
                       </div>
                     </div>
                   </div>
                   
                   {/* Donation amount */}
-                  <div className="text-right">
-                    <p className="text-3xl font-black text-brand-secondary group-hover:text-brand-secondary-dark transition-colors duration-300 drop-shadow-sm">
+                  <div className="text-right flex-shrink-0 ml-2">
+                    <p className="text-2xl sm:text-3xl font-black text-brand-secondary group-hover:text-brand-secondary-dark transition-colors duration-300 drop-shadow-sm">
                       ${donor.amount.toLocaleString()}
                     </p>
                   </div>
@@ -235,15 +235,15 @@ export function MonthlyRankings() {
         
         {/* Enhanced footer */}
         {monthlyDonors.length > 0 && (
-          <div className="mt-8 pt-6 border-t-2 border-gradient-to-r from-brand-primary/20 via-brand-secondary/20 to-brand-primary/20">
+          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t-2 border-gradient-to-r from-brand-primary/20 via-brand-secondary/20 to-brand-primary/20">
             <div className="text-center">
-              <p className="text-sm text-gray-600 font-medium mb-2">
+              <p className="text-xs sm:text-sm text-gray-600 font-medium mb-2">
                 Rankings are updated in real-time
               </p>
               <div className="flex items-center justify-center gap-2 text-brand-secondary">
-                <Heart className="h-4 w-4" />
-                <span className="text-sm font-semibold">Thank you for your generosity!</span>
-                <Heart className="h-4 w-4" />
+                <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="text-xs sm:text-sm font-semibold">Thank you for your generosity!</span>
+                <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
               </div>
             </div>
           </div>

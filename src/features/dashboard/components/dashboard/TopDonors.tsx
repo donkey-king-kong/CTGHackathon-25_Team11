@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Trophy, Crown, Medal, MapPin, TrendingUp, Users, DollarSign, Award, AlertCircle, TrendingDown, Heart } from "lucide-react";
 import { supabase } from "@/infrastructure/supabase/client";
@@ -135,7 +135,7 @@ export function TopDonors() {
     }
   };
 
-      return (
+  return (
       <Card className="bg-white border-0 shadow-lg overflow-hidden">
         <CardHeader className="pb-4 sm:pb-6 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
           <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-xl sm:text-2xl font-bold">
