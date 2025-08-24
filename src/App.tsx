@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import Layout from "./components/Layout";
-import Dashboard from "./pages/Dashboard";
+import Leaderboard from "./pages/Leaderboard";
 import Stories from "./pages/Stories";
 import Admin from "./pages/Admin";
 import Festival from "./pages/Festival";
@@ -36,7 +36,7 @@ const App = () => (
             <Route path="/festival" element={<Festival />} />
             <Route path="/what-we-do" element={<WhatWeDo />} />
             <Route path="/about" element={<ReachAbout />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/stories" element={<Stories />} />
             <Route path="/donate" element={<ReachDonate />} />
             <Route path="/donate/success" element={<DonateSuccess />} />
@@ -47,14 +47,15 @@ const App = () => (
             <Route path="/messages" element={<Messages />} />
             <Route path="/messages/new" element={<MessagesUpload />} />
             <Route path="/messages/moderate" element={<MessagesModerate />} />
+            <Route path="/messages-upload" element={<MessagesUpload />} />
             
             {/* Authentication */}
             <Route path="/auth" element={<Auth />} />
             
-            {/* Dashboard Scaffolding - Future Implementation */}
-            <Route path="/dashboard/leaderboard" element={<Dashboard />} />
-            <Route path="/dashboard/recent" element={<Dashboard />} />
-            <Route path="/dashboard/regions" element={<Dashboard />} />
+            {/* Leaderboard Scaffolding - Future Implementation */}
+            <Route path="/leaderboard/leaderboard" element={<Leaderboard />} />
+            <Route path="/leaderboard/recent" element={<Leaderboard />} />
+            <Route path="/leaderboard/regions" element={<Leaderboard />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
