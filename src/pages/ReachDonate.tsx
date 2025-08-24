@@ -36,7 +36,7 @@ export default function ReachDonate() {
     ]
   };
 
- const regions = ["Central & Western", "Eastern", "Southern", "Wan Chai", "Kowloon City", 
+ const regions = ["All", "Central & Western", "Eastern", "Southern", "Wan Chai", "Kowloon City", 
   "Kwun Tong", "Sham Shui Po", "Wong Tai Sin", "Yau Tsim Mong", "Islands", "Kwai Tsing", 
   "North", "Sai Kung", "Sha Tin", "Tai Po", "Tsuen Wan", "Tuen Mun", "Yuen Long"];
 
